@@ -140,7 +140,7 @@ public class Whiteboard extends JFrame {
 		mnSavefile.add(mntmSaveFileAs);
 
 		// whether the mode is manager
-		if(mode == client) {
+		if(mode == manager) {
 			mnFile.setVisible(false);
 		}
 
@@ -265,6 +265,11 @@ public class Whiteboard extends JFrame {
 		btnAddRectangle.setMaximumSize(new Dimension(30, 30));
 		btnAddRectangle.setPreferredSize(new Dimension(30, 30));
 
+		JButton btnClose = new JButton("");
+		btnClose.setIcon(new ImageIcon(Whiteboard.class.getResource("/resources/close.png")));
+		btnClose.setMaximumSize(new Dimension(30, 30));
+		btnClose.setPreferredSize(new Dimension(30, 30));
+
 		String[] lineWidth = new String[] {"1","2","3","4","5"};
 		JComboBox WidthChooser = new JComboBox(lineWidth);
 		WidthChooser.setMaximumSize(new Dimension(80, 30));
@@ -277,7 +282,9 @@ public class Whiteboard extends JFrame {
 		utilityGroup.add(btnAddOval);
 		utilityGroup.add(btnAddRectangle);
 		utilityGroup.add(btnAddText);
+		utilityGroup.add(btnClose);
 		utilityGroup.add(WidthChooser);
+
 		controlGroup.add(utilityGroup);
 		controlGroup.add(functionGroup);
 		controlGroup.add(networkingGroup);
@@ -352,6 +359,12 @@ public class Whiteboard extends JFrame {
 				System.out.println(Stroke);
 			}
 		});;
+
+		btnClose.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				board.dispose();
+			}
+		});
 
 		// Change the Font by this function
 
@@ -668,9 +681,9 @@ public class Whiteboard extends JFrame {
 	}
 
 
-//	public static void main(String args[]) {
-//
-//		Whiteboard whiteboard = new Whiteboard(manager);
-//	}
+	public static void main(String args[]) {
+
+		Whiteboard whiteboard = new Whiteboard(manager);
+	}
 
 }
