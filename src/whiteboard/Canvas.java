@@ -11,12 +11,9 @@
 	import java.awt.event.MouseAdapter;
 	import java.awt.event.MouseEvent;
 	import java.awt.event.MouseMotionAdapter;
-import java.io.Serializable;
-import java.util.ArrayList;
-	import java.util.LinkedList;
-	import java.util.List;
-	import java.util.Random;
-	
+	import java.io.Serializable;
+	import java.util.*;
+
 	import javax.swing.JButton;
 	import javax.swing.JColorChooser;
 	import javax.swing.JFrame;
@@ -30,6 +27,7 @@ import java.util.ArrayList;
 		private Point movingKnob;
 		
 		private ArrayList<DShape> shapes;
+		private Hashtable<Integer, DShape> shapeTable;
 		private ArrayList<Point> knobs;
 		
 		private int x = 0;
@@ -90,8 +88,8 @@ import java.util.ArrayList;
 	        });           
 			
 		}
-				
-		public void drag(){	
+
+		public void drag(){
 			addMouseMotionListener( new MouseMotionAdapter() {
 	            public void mouseDragged(MouseEvent e) {
 	            	
@@ -213,6 +211,7 @@ import java.util.ArrayList;
 	    }
 		
 		public void addShape(DShapeModel model) {
+			System.out.println(model);
 			if(board.getMode() != 2){
 			DShape shape = null;
 			if (model instanceof DOvalModel)
@@ -289,16 +288,32 @@ import java.util.ArrayList;
 			board.clear();
 			selected = null;
 		    repaint();
-			}
+		}
 			
 		public boolean selected(){
 			if (selected != null) 
 				return true;
 			else 
 				return false;
-			}
-			
 		}
+
+		public void updateArrayListByHT(Hashtable<Integer, DShape> shapeTable){
+			int sizeOfHT = shapeTable.size();
+			int maximumSize = this.shapes.size();
+			Set<Integer> keys = shapeTable.keySet();
+			for (int i =0 ; i< sizeOfHT; i++){
+				if (i > maximumSize){ //key value is started from 1
+					this.shapes.add(shapeTable.get(i));
+				}
+			}
+		}
+
+		public void editArrayListByHT(Hashtable<Integer, DShape> shapeTable, int index){
+			this.shapes.set(index, shapeTable.get(index));
+			updateArrayListByHT(shapeTable);
+		}
+
+	}
 		
 		
 		
