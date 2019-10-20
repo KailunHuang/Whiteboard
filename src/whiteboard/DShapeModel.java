@@ -141,7 +141,7 @@ public class DShapeModel implements Serializable{
         int height = Math.abs(pivotKnob.y - movingKnob.y); 
         
         setBounds(x, y, width, height); 
-    
+//    	System.out.println(x + " " +y + " " +width+" "+height);
 	}
 	
 	public String toString(){
