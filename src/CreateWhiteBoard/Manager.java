@@ -2,6 +2,7 @@ package CreateWhiteBoard;
 
 import JoinWhiteBoard.UDPReceive;
 //import com.sun.source.tree.Scope;
+import whiteboard.DShapeModel;
 import whiteboard.Whiteboard;
 
 import javax.swing.*;
@@ -32,7 +33,7 @@ public class Manager {
 
     private static Hashtable<String, Integer> addresses = new Hashtable<>();
     private static Hashtable<String, Socket> socketList = new Hashtable<>();
-    private static Hashtable<Integer, WhiteBoardInfo> modelTable = new Hashtable<>();
+    private static Hashtable<Integer, DShapeModel> whiteBoard_Info = new Hashtable<>();
     private static String[] columnNames = {"Online Users"};
     private static String[][] data = new String[10][1];
     private static JTextField sendArea;
@@ -42,8 +43,6 @@ public class Manager {
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
     private static final String InetIP = "172.20.10.8"; // 服务器的IP
-
-    private static Whiteboard whiteboard;
     private static JMenuBar menuBar;
 
     private static int manager = 0;
@@ -178,7 +177,11 @@ public class Manager {
         ActionListener newWhiteboard = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                whiteboard = new Whiteboard(manager);
+                try {
+                    Whiteboard whiteboard = new Whiteboard(manager);
+                } catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
             }
         };
 
@@ -317,8 +320,8 @@ public class Manager {
     }
 
 
-    public static Hashtable<Integer, WhiteBoardInfo> postModelTable() {
-        return modelTable;
+    public static Hashtable<Integer, DShapeModel> post_whiteboard_info() {
+        return whiteBoard_Info;
     }
 
 
@@ -363,19 +366,6 @@ public class Manager {
             }
         }
     }
-
-    static class receiveWhiteBoardThread extends Thread{
-        private int port;
-
-        public receiveWhiteBoardThread(int port) {
-            this.port = port;
-        }
-
-        public synchronized void run() {
-
-        }
-    }
-
 
 
     //--------等待新的user👇---------

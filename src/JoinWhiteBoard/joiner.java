@@ -150,7 +150,11 @@ public class joiner {
         ActionListener newWhiteboard = new ActionListener() {  // 新建whiteboard
             @Override
             public void actionPerformed(ActionEvent e) {
-                whiteboard = new Whiteboard(client);
+                try {
+                    whiteboard = new Whiteboard(client);
+                } catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
             }
         };
 
