@@ -16,6 +16,7 @@ import java.util.Map;
 
 import CreateWhiteBoard.IjoinerAddresses;
 import CreateWhiteBoard.UDPSend;
+import whiteboard.Whiteboard;
 
 import javax.swing.*;
 
@@ -39,7 +40,13 @@ public class joiner {
     private static JFrame frame;
     private static JTable table;
     private static final String InetIP = "192.168.43.200"; //服务端IP
-    private static final String LocalInetIP = "192.168.45.175"; //自己的IP
+    private static final String LocalInetIP = "192.168.43.112"; //自己的IP
+    private static JButton btnWhiteboard;
+    private static JMenuBar menuBar;
+
+    private static Whiteboard whiteboard;
+
+    private static int client = 1;
 
 
     public static void main(String[] args) throws SocketException {
@@ -92,8 +99,8 @@ public class joiner {
 
     static void initialize() {
         frame = new JFrame();
-        frame.getContentPane().setBackground(new Color(0, 153, 102));
-        frame.setBounds(100, 100, 417, 440);
+//        frame.getContentPane().setBackground(new Color(0, 153, 102));
+        frame.setBounds(100, 100, 575, 490);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
@@ -105,17 +112,13 @@ public class joiner {
         scrollPane.setViewportView(table);
 
         sendArea = new JTextField();
-        sendArea.setBounds(154, 344, 257, 26);
+        sendArea.setBounds(154, 386, 303, 29);
         frame.getContentPane().add(sendArea);
         sendArea.setColumns(10);
 
         JButton btnSend = new JButton("Send");
-        btnSend.setBounds(154, 382, 100, 25);
+        btnSend.setBounds(456, 389, 119, 25);
         frame.getContentPane().add(btnSend);
-
-        btnQuit = new JButton("Quit");
-        btnQuit.setBounds(301, 380, 110, 29);
-        frame.getContentPane().add(btnQuit);
 
 
         textArea = new JTextArea();
@@ -126,9 +129,40 @@ public class joiner {
         textArea.setColumns(1);
         //ChatArea.setColumnHeaderView(textArea);
         ChatArea = new JScrollPane(textArea);
-        ChatArea.setBounds(154, 6, 257, 332);
+        ChatArea.setBounds(154, 6, 415, 368);
         ChatArea.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         frame.getContentPane().add(ChatArea);
+
+        ActionListener quit = new ActionListener() {  // 退出聊天
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    String message = LocalInetIP + ":" + socket.getLocalPort();
+                    UDPSend.quit(InetIP, message);
+                    socket.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                System.exit(0);
+            }
+        };
+
+        ActionListener newWhiteboard = new ActionListener() {  // 新建whiteboard
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                whiteboard = new Whiteboard(client);
+            }
+        };
+
+        menuBar = new JMenuBar();
+        frame.setJMenuBar(menuBar);
+
+        btnWhiteboard = new JButton("Whiteboard");
+        menuBar.add(btnWhiteboard);
+
+        btnQuit = new JButton("Quit");
+        menuBar.add(btnQuit);
+        btnQuit.addActionListener(quit);
         frame.setVisible(true);
 
         sendArea.addKeyListener(new KeyListener() {
@@ -171,21 +205,6 @@ public class joiner {
             }
         };
         btnSend.addActionListener(sendMessage);
-
-        ActionListener quit = new ActionListener() {  // 退出聊天
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    String message = LocalInetIP + ":" + socket.getLocalPort();
-                    UDPSend.quit(InetIP, message);
-                    socket.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-                System.exit(0);
-            }
-        };
-        btnQuit.addActionListener(quit);
     }
 
     public static void updateChatTable(String message) throws IOException {  //更新GUI中在线用户列表
