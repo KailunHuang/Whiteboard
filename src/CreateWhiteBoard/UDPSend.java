@@ -1,6 +1,11 @@
 package CreateWhiteBoard;
 
+import whiteboard.DShapeModel;
+
+import java.awt.*;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
@@ -45,5 +50,26 @@ public class UDPSend {
         datagramPacket.setSocketAddress(new InetSocketAddress(ip, port)); // 通过socket发送
         datagramSocket.send(datagramPacket);
         datagramSocket.close();
+    }
+
+    public static void update_whiteboard_table(String ip, int port, int motified_index) throws IOException {
+        DatagramSocket datagramSocket = new DatagramSocket();
+        String str = "/w" + motified_index;
+        byte[] datagram = str.getBytes();
+        DatagramPacket datagramPacket = new DatagramPacket(datagram, datagram.length);
+        datagramPacket.setSocketAddress(new InetSocketAddress(ip, port));
+        datagramSocket.send(datagramPacket);
+        datagramSocket.close();
+    }
+
+    public static void send_whiteboard_info(String ip, int port, DShapeModel item) throws IOException {
+        DatagramSocket datagramSocket = new DatagramSocket();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(item);
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+        DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length, new InetSocketAddress(ip, port));
+        datagramSocket.send(datagramPacket);
+        System.out.println("已发送" + item);
     }
 }

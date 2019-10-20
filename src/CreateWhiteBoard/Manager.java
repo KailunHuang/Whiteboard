@@ -23,6 +23,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import whiteboard.DShape;
+import whiteboard.DShapeModel;
 
 public class Manager {
 
@@ -32,6 +33,7 @@ public class Manager {
 
     private static Hashtable<String, Integer> addresses = new Hashtable<>();
     private static Hashtable<String, Socket> socketList = new Hashtable<>();
+    private static Hashtable<Integer, DShapeModel> whiteboard_info = new Hashtable<>();
     private static String[] columnNames = {"Online Users"};
     private static String[][] data = new String[10][1];
     private static JTextField sendArea;
@@ -295,6 +297,10 @@ public class Manager {
 
     public static Hashtable<String, Integer> postHashtable() {
         return addresses;
+    }
+
+    public static Hashtable<Integer, DShapeModel> post_whiteboard_info() {
+        return whiteboard_info;
     }
 
 
