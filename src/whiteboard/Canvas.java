@@ -39,7 +39,7 @@ import java.util.ArrayList;
 		private int x_start, y_start;
 		private int x_drag, y_drag; 
 		
-		public Canvas(Whiteboard board){
+		public Canvas(Whiteboard board) throws ClassNotFoundException {
 			this.board = board;
 			this.setBackground(Color.WHITE);
 			canvasClicked();
@@ -49,7 +49,6 @@ import java.util.ArrayList;
 			shapes = new ArrayList<DShape>();
 			selected = null; 
 			movingKnob = null;
-			addShape(UDP_Object_Receiver.dShapeModel);
 	        setVisible(true); 
 		}
 		

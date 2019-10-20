@@ -1,5 +1,4 @@
 package whiteboard;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -8,7 +7,7 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 
 public class UDP_Object_Receiver {
-    public static DShapeModel dShapeModel = null;
+    static DShapeModel dShapeModel = null;
 
     public static void main(String[] args) throws ClassNotFoundException {
         try {
@@ -19,8 +18,8 @@ public class UDP_Object_Receiver {
             da.receive(datagramPacket);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(datagramPacket.getData());
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            DShapeModel dShapeModel = (DShapeModel) objectInputStream.readObject();
-            System.out.println("接收完毕"+dShapeModel);
+            dShapeModel = (DShapeModel) objectInputStream.readObject();
+            System.out.println("接收完毕 "+dShapeModel);
             System.out.println("等待接收...");
             datagramPacket = new DatagramPacket(bytes, bytes.length);
             da.receive(datagramPacket);
@@ -30,5 +29,9 @@ public class UDP_Object_Receiver {
             e.printStackTrace();
         }
 
+    }
+    public static DShapeModel getdShapeModel() throws ClassNotFoundException {
+        main(null);
+        return dShapeModel;
     }
 }

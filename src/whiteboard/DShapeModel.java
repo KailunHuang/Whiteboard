@@ -145,7 +145,7 @@ public class DShapeModel implements Serializable{
 	}
 	
 	public String toString(){
-		return "Shape is " + width + " by " + height + " and located at " + x + " " + y;
+		return "Shape is " + bounds.width + " by " + bounds.height + " and located at " + bounds.x + " " + bounds.y;
 	}
 	
 	public void setStroke(int Stroke) {

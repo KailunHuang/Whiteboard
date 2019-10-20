@@ -75,7 +75,7 @@ public class Whiteboard extends JFrame {
 	public Color freehandColor;
 	public int Stroke = 1;
 	
-	public Whiteboard() { 
+	public Whiteboard() throws ClassNotFoundException {
         
 		board = new JFrame("Whiteboard");
 		getContentPane().setLayout(new BorderLayout()); 
@@ -662,7 +662,7 @@ public class Whiteboard extends JFrame {
 	}
 	
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) throws ClassNotFoundException {
 		
 		Whiteboard whiteboard = new Whiteboard(); 
 	}
