@@ -49,7 +49,6 @@ import java.util.ArrayList;
 			shapes = new ArrayList<DShape>();
 			selected = null; 
 			movingKnob = null;
-			addShape(UDP_Object_Receiver.dShapeModel);
 	        setVisible(true); 
 		}
 		

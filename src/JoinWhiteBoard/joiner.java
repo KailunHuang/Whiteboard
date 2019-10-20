@@ -159,6 +159,7 @@ public class joiner {
 
         btnWhiteboard = new JButton("Whiteboard");
         menuBar.add(btnWhiteboard);
+        btnWhiteboard.addActionListener(newWhiteboard);
 
         btnQuit = new JButton("Quit");
         menuBar.add(btnQuit);
