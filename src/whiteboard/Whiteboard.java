@@ -140,7 +140,7 @@ public class Whiteboard extends JFrame {
 		mnSavefile.add(mntmSaveFileAs);
 
 		// whether the mode is manager
-		if(mode == manager) {
+		if(mode == client) {
 			mnFile.setVisible(false);
 		}
 
