@@ -2,6 +2,7 @@ package CreateWhiteBoard;
 
 import JoinWhiteBoard.UDPReceive;
 //import com.sun.source.tree.Scope;
+import whiteboard.Whiteboard;
 
 import javax.swing.*;
 import javax.swing.event.AncestorListener;
@@ -41,6 +42,11 @@ public class Manager {
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
     private static final String InetIP = "172.20.10.8"; // 服务器的IP
+
+    private static Whiteboard whiteboard;
+    private static JMenuBar menuBar;
+
+    private static int manager = 0;
 
 
     public static void main(String[] args) throws SocketException {
@@ -114,27 +120,27 @@ public class Manager {
 
     static void initialize() {
         frame = new JFrame();
-        frame.getContentPane().setBackground(new Color(0, 153, 102));
+//        frame.getContentPane().setBackground(new Color(0, 153, 102));
         frame.setBackground(Color.DARK_GRAY);
-        frame.setBounds(100, 100, 417, 440);
+        frame.setBounds(100, 100, 580, 450);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
         scrollPane = new JScrollPane();
-        scrollPane.setBounds(6, 6, 140, 332);
+        scrollPane.setBounds(6, 6, 140, 282);
         frame.getContentPane().add(scrollPane);
 
         table = new JTable(data, columnNames);
         scrollPane.setViewportView(table);
 
         textField = new JTextField();
-        textField.setBounds(6, 343, 140, 29);
+        textField.setBounds(6, 308, 140, 29);
         frame.getContentPane().add(textField);
         textField.setColumns(10);
 
         JButton btnKickOut = new JButton("Kick Out");
 
-        btnKickOut.setBounds(6, 374, 140, 29);
+        btnKickOut.setBounds(6, 352, 140, 29);
         frame.getContentPane().add(btnKickOut);
 
         textArea = new JTextArea();
@@ -145,22 +151,44 @@ public class Manager {
         textArea.setColumns(1);
         //ChatArea.setColumnHeaderView(textArea);
         ChatArea = new JScrollPane(textArea);
-        ChatArea.setBounds(154, 6, 257, 332);
+        ChatArea.setBounds(158, 5, 401, 332);
         ChatArea.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         frame.getContentPane().add(ChatArea);
 
         sendArea = new JTextField();
-        sendArea.setBounds(154, 344, 253, 26);
+        sendArea.setBounds(158, 351, 288, 29);
         frame.getContentPane().add(sendArea);
         sendArea.setColumns(10);
 
         JButton btnSend = new JButton("Send");
-        btnSend.setBounds(150, 376, 119, 25);
+        btnSend.setBounds(450, 354, 119, 25);
         frame.getContentPane().add(btnSend);
 
+        menuBar = new JMenuBar();
+        frame.setJMenuBar(menuBar);
+
+        ActionListener clean = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                textArea.setText(" ");
+                sendArea.setText(" ");
+            }
+        };
+
+        ActionListener newWhiteboard = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                whiteboard = new Whiteboard(manager);
+            }
+        };
+
+        JButton btnWhiteboard = new JButton("Whiteboard");
+        menuBar.add(btnWhiteboard);
+
         btnClean = new JButton("Clean");
-        btnClean.setBounds(292, 374, 119, 29);
-        frame.getContentPane().add(btnClean);
+        menuBar.add(btnClean);
+        btnClean.addActionListener(clean);
+        btnWhiteboard.addActionListener(newWhiteboard);
         frame.setVisible(true);
 
         sendArea.addKeyListener(new KeyListener() {
@@ -233,16 +261,6 @@ public class Manager {
             }
         };
         btnSend.addActionListener(sendMessage);
-
-        ActionListener clean = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                textArea.setText(" ");
-                sendArea.setText(" ");
-            }
-        };
-        btnClean.addActionListener(clean);
-        System.out.println("....");
     }
 
 
