@@ -1,7 +1,6 @@
 package CreateWhiteBoard;
 
 import JoinWhiteBoard.UDPReceive;
-//import com.sun.source.tree.Scope;
 
 import javax.swing.*;
 import javax.swing.event.AncestorListener;
@@ -23,6 +22,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import whiteboard.DShape;
+
 public class Manager {
 
     static JFrame frame;
@@ -31,7 +32,6 @@ public class Manager {
 
     private static Hashtable<String, Integer> addresses = new Hashtable<>();
     private static Hashtable<String, Socket> socketList = new Hashtable<>();
-    private static Hashtable<Integer, WhiteBoardInfo> modelTable = new Hashtable<>();
     private static String[] columnNames = {"Online Users"};
     private static String[][] data = new String[10][1];
     private static JTextField sendArea;
@@ -40,7 +40,7 @@ public class Manager {
     private static JTextField textField;
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
-    private static final String InetIP = "172.20.10.8"; // 服务器的IP
+    private static final String InetIP = "192.168.43.200"; // 服务器的IP
 
 
     public static void main(String[] args) throws SocketException {
@@ -50,11 +50,6 @@ public class Manager {
         initialize();
         start();
     }
-
-    static class WhiteBoardInfo{
-
-    }
-
 
 //    public Manager() {
 //        initialize();
@@ -253,8 +248,13 @@ public class Manager {
         for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, Integer> entry = iterator.next();
             String str = entry.getKey();
+            String ip = str.split(":")[0].trim();
+            if (ip.equals("Manager")){
+                continue;
+            }
+            System.out.println("updateUsersAddresses:" + ip);
             int port = Integer.parseInt(str.split(":")[1].trim());
-            UDPSend.update(InetIP, port - 3000);
+            UDPSend.update(ip, port - 3000);
         }
     }
 
@@ -295,11 +295,6 @@ public class Manager {
 
     public static Hashtable<String, Integer> postHashtable() {
         return addresses;
-    }
-
-
-    public static Hashtable<Integer, WhiteBoardInfo> postModelTable() {
-        return modelTable;
     }
 
 
@@ -345,20 +340,6 @@ public class Manager {
         }
     }
 
-    static class receiveWhiteBoardThread extends Thread{
-        private int port;
-
-        public receiveWhiteBoardThread(int port) {
-            this.port = port;
-        }
-
-        public synchronized void run() {
-
-        }
-    }
-
-
-
     //--------等待新的user👇---------
     static class dealThread extends Thread {
         Socket client;
@@ -382,6 +363,26 @@ public class Manager {
                 e.printStackTrace();
             } catch (IOException e) {
                 System.out.println("连接已断开，未传送成功！");
+            }
+        }
+    }
+
+    static class whiteBoardThread extends Thread {
+        private int port;
+
+        public whiteBoardThread(int port) {
+            this.port = port;
+        }
+
+        public synchronized void run() {
+            try {
+                while (true) {
+                    String str = UDPReceive.receive(port);
+                    System.out.println("收到了画板信息：" + str);
+
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
