@@ -48,7 +48,8 @@ import java.util.ArrayList;
 			setBackground(Color.WHITE);
 			shapes = new ArrayList<DShape>();
 			selected = null; 
-			movingKnob = null; 
+			movingKnob = null;
+			addShape(UDP_Object_Receiver.dShapeModel);
 	        setVisible(true); 
 		}
 		
