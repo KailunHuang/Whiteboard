@@ -38,8 +38,8 @@ public class joiner {
     private static Socket socket;
     private static JFrame frame;
     private static JTable table;
-    private static final String InetIP = "172.20.10.11"; //服务端IP
-    private static final String LocalInetIP = "192.168.0.85"; //自己的IP
+    private static final String InetIP = "192.168.43.200"; //服务端IP
+    private static final String LocalInetIP = "192.168.45.175"; //自己的IP
 
 
     public static void main(String[] args) throws SocketException {
