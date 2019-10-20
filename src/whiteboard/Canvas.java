@@ -89,8 +89,8 @@ import java.io.Serializable;
 	        });           
 			
 		}
-				
-		public void drag(){	
+
+		public void drag(){
 			addMouseMotionListener( new MouseMotionAdapter() {
 	            public void mouseDragged(MouseEvent e) {
 	            	
@@ -222,7 +222,8 @@ import java.io.Serializable;
 				shape = new DRect(model);
 			else if (model instanceof DLineModel)
 				shape = new DLine(model);
-
+			int id = shapeTable.size();
+			shapeTable.put(id, shape);
 			shapes.add(shape);
 			selected = shape;
 			board.add(shape); 
