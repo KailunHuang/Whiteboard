@@ -12,11 +12,8 @@
 	import java.awt.event.MouseEvent;
 	import java.awt.event.MouseMotionAdapter;
 import java.io.Serializable;
-import java.util.ArrayList;
-	import java.util.LinkedList;
-	import java.util.List;
-	import java.util.Random;
-	
+	import java.util.*;
+
 	import javax.swing.JButton;
 	import javax.swing.JColorChooser;
 	import javax.swing.JFrame;
@@ -30,6 +27,7 @@ import java.util.ArrayList;
 		private Point movingKnob;
 		
 		private ArrayList<DShape> shapes;
+		private Hashtable<Integer, DShape> shapeTable;
 		private ArrayList<Point> knobs;
 		
 		private int x = 0;
@@ -47,6 +45,7 @@ import java.util.ArrayList;
 			setPreferredSize(new Dimension(400, 400));
 			setBackground(Color.WHITE);
 			shapes = new ArrayList<DShape>();
+			shapeTable = new Hashtable<Integer, DShape>();
 			selected = null; 
 			movingKnob = null; 
 	        setVisible(true); 
@@ -223,6 +222,7 @@ import java.util.ArrayList;
 				shape = new DRect(model);
 			else if (model instanceof DLineModel)
 				shape = new DLine(model);
+
 			shapes.add(shape);
 			selected = shape;
 			board.add(shape); 
