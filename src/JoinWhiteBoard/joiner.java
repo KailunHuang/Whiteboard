@@ -42,7 +42,7 @@ public class joiner {
     public static final String InetIP = "192.168.43.175"; //服务端IP
     // 凯凯: 192.168.43.175 小陆: 192.168.43.200
     public static final String LocalInetIP = "192.168.43.112"; //自己的IP
-    public static int LocalPort = 0
+    public static int LocalPort = 0;
     private static JButton btnWhiteboard;
     private static JMenuBar menuBar;
     private static Whiteboard whiteboard;

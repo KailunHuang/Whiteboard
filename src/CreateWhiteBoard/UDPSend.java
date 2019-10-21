@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+
 import CreateWhiteBoard.Manager.DShapePackage;
 
 public class UDPSend {
@@ -55,8 +56,9 @@ public class UDPSend {
 
     public static void update_whiteboard_table(String ip, int port, int index) throws IOException {
         DatagramSocket datagramSocket = new DatagramSocket();
-        String str = "/w"+index;
+        String str = "/w" + index;
         byte[] datagram = str.getBytes();
+        System.out.println("发送给地址: " + ip + ": " + port + " 信息：" + str);
         DatagramPacket datagramPacket = new DatagramPacket(datagram, datagram.length);
         datagramPacket.setSocketAddress(new InetSocketAddress(ip, port));
         datagramSocket.send(datagramPacket);

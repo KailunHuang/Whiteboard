@@ -344,6 +344,7 @@ public class Manager {
     }
 
     private static void print_whiteboard_info(Hashtable<Integer, DShapeModel> hashtable) {
+        System.out.println("当前的whiteboard_info：");
         for (int i = 1; i <= hashtable.size(); i++) {
             System.out.println(i + " : " + hashtable.get(i));
         }
@@ -384,6 +385,8 @@ public class Manager {
         }
     }
 
+    public static int whiteboard_index = 1;
+
     public static class reveive_whiteboardInfo_Thread extends Thread {
         private int port;
 
@@ -397,13 +400,15 @@ public class Manager {
                     DShapePackage dShapePackage = UDPReceive.receive_whiteboard_info(port);
                     System.out.println("收到了信息：" + dShapePackage.dShapeModel + ", " + dShapePackage.index);
                     if (dShapePackage.index == 0) { // 直接添加到whitboard_info
-                        whiteBoard_Info.put(whiteBoard_Info.size() + 1, dShapePackage.dShapeModel);
+                        whiteBoard_Info.put(whiteboard_index, dShapePackage.dShapeModel);
+                        whiteboard_index++;
                     } else if (dShapePackage.index < 0) { //删除
                         whiteBoard_Info.remove(-1 * dShapePackage.index, dShapePackage.dShapeModel);
-                    }else{//修改其中一个
+                    } else {//修改其中一个
                         whiteBoard_Info.put(dShapePackage.index, dShapePackage.dShapeModel);
                     }
                     //让大家更新
+                    System.out.println("whiteBoard_Info的size: " + whiteBoard_Info.size());
                     print_whiteboard_info(whiteBoard_Info);
                     send_update_whiteboard(dShapePackage.index);
                 }
