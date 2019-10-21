@@ -1,5 +1,6 @@
 package JoinWhiteBoard;
 
+import CreateWhiteBoard.Manager;
 import whiteboard.DShape;
 import whiteboard.DShapeModel;
 
@@ -9,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
+import CreateWhiteBoard.Manager.DShapePackage;
 
 public class UDPReceive {
     // 用来接受manager发来的 kick out 或者update 的指令
@@ -25,13 +27,14 @@ public class UDPReceive {
                 break;
             }
         }
+
         System.out.println("接收到的有效字段长度为：" + length);
         String str = new String(datagram, 0, length, "UTF-8");
         datagramSocket.close();
         return str;
     }
 
-    public static DShapeModel receive_whiteboard_info(int port) throws IOException, ClassNotFoundException {
+    public static DShapePackage receive_whiteboard_info(int port) throws IOException, ClassNotFoundException {
             System.out.println("等待接收 whiteboard_info...");
             DatagramSocket da = new DatagramSocket(port);
             byte[] bytes = new byte[1024 * 1024];
@@ -39,7 +42,7 @@ public class UDPReceive {
             da.receive(datagramPacket);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(datagramPacket.getData());
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            DShapeModel dShapeModel = (DShapeModel) objectInputStream.readObject();
+            DShapePackage dShapeModel = (DShapePackage) objectInputStream.readObject();
             System.out.println("接收完毕 " + dShapeModel);
             return dShapeModel;
     }
