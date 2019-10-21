@@ -723,4 +723,5 @@ public class Whiteboard extends JFrame {
 		return mode;
 	}
 
+
 }
