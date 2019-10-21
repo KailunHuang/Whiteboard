@@ -305,7 +305,11 @@ public class Whiteboard extends JFrame {
 				DLineModel model = new DLineModel(p1,p2,penColor);
 
 				//model.setPoints(p1,p2);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -313,7 +317,11 @@ public class Whiteboard extends JFrame {
 		btnAddOval.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DOvalModel model = new DOvalModel(25,25,100,100, penColor);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -321,7 +329,11 @@ public class Whiteboard extends JFrame {
 		btnAddRectangle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DRectModel model = new DRectModel(25,25,100,100, penColor);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -331,7 +343,11 @@ public class Whiteboard extends JFrame {
 				String s = textField.getText();
 				DTextModel model = new DTextModel();
 				model.setBounds(20, 20, 415, 80);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -513,7 +529,11 @@ public class Whiteboard extends JFrame {
 				Point p2 = new Point(75,75);
 				DLineModel model = new DLineModel(p1,p2,penColor);
 				//model.setPoints(p1,p2);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -521,7 +541,11 @@ public class Whiteboard extends JFrame {
 		mntmAddOval.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DOvalModel model = new DOvalModel(25,25,100,100, penColor);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -529,7 +553,11 @@ public class Whiteboard extends JFrame {
 		mntmAddRectangle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DRectModel model = new DRectModel(25,25,100,100, penColor);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -539,7 +567,11 @@ public class Whiteboard extends JFrame {
 				String s = textField.getText();
 				DTextModel model = new DTextModel();
 				model.setBounds(20, 20, 415, 80);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});

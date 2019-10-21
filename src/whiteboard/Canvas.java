@@ -111,8 +111,12 @@
 	                    // Set Pen Color
 	                    model.setColor(board.penColor);
 	                    model.setStroke(board.Stroke);
-	    				addShape(model);
-	    				repaint();
+						try {
+							addShape(model);
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+						repaint();
 	    				x_start = x_drag;
 	    	            y_start = y_drag;
 	    	            
@@ -126,8 +130,12 @@
 	                    // Set Pen Color
 	                    model.setColor(Color.WHITE);
 	                    model.setStroke(board.Stroke);
-	    				addShape(model);
-	    				repaint();
+						try {
+							addShape(model);
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+						repaint();
 	    				x_start = x_drag;
 	    	            y_start = y_drag;
 	            		
@@ -400,7 +408,12 @@
 						if (hashtable.get(i)==null){
 							continue;
 						}
-						canvas.addShape(hashtable.get(i));
+						try {
+							canvas.addShape(hashtable.get(i));
+						} catch (IOException ex) {
+							ex.printStackTrace();
+						}
+
 						canvas.board.whiteBoard_Info.put(i, hashtable.get(i));
 					}
 				}
