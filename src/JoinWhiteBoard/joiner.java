@@ -39,7 +39,7 @@ public class joiner {
     private static Socket socket;
     private static JFrame frame;
     private static JTable table;
-    private static final String InetIP = "192.168.43.175"; //服务端IP
+    private static String InetIP = "192.168.43.175"; //服务端IP
     // 凯凯: 192.168.43.175 小陆: 192.168.43.200
     private static final String LocalInetIP = "192.168.43.112"; //自己的IP
     private static JButton btnWhiteboard;
@@ -47,26 +47,41 @@ public class joiner {
 
     private static Whiteboard whiteboard;
 
+
     private static int client = 1;
 
 
-    public static void main(String[] args) throws SocketException {
-        initialize();
-        start();
-    }
+//    public static void main(String[] args) throws SocketException {
 
-//
-//    public joiner() {
+//        joinerInitialize window = new joinerInitialize();
 //        initialize();
 //        start();
 //    }
 
 
+    public joiner(String IPAddress, Socket socketClient) {
+        InetIP = IPAddress;
+        socket = socketClient;
+        initialize();
+        start();
+    }
+
+
     public static void start() {
 
         try {
-            System.out.println("目标IP是：" + InetIP);
-            socket = new Socket(InetIP, 8888);
+//            System.out.println("目标IP是：" + InetIP);
+
+            //-------传输画板数据👇---------
+//            OutputStream outputStream = socket.getOutputStream();
+//            InputStream inputStream = socket.getInputStream();
+//            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
+//            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+//            String ServerAns = bufferedReader.readLine();
+//
+//            System.out.println("成功与Server建立连接!");
+            //-------传输数据👆---------
+
             //------RMI👇-------
             //连接到注册表
             registry = LocateRegistry.getRegistry(InetIP,1099);
@@ -80,17 +95,6 @@ public class joiner {
             //---------更新在线用户👇----------
             updateThread updateThread = new updateThread(socket.getLocalPort() - 3000);
             updateThread.start();
-
-            //-------传输画板数据👇---------
-            OutputStream outputStream = socket.getOutputStream();
-            InputStream inputStream = socket.getInputStream();
-            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            bufferedWriter.write("坐标\n");
-            bufferedWriter.flush();
-            // String ServerAns = bufferedReader.readLine();
-            System.out.println("成功与Server建立连接!");
-            //-------传输数据👆---------
 
         } catch (Exception e) {
             e.printStackTrace();

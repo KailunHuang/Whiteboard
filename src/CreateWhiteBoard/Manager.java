@@ -43,7 +43,7 @@ public class Manager {
     private static JTextField textField;
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
-    private static final String InetIP = "192.168.43.200"; // 服务器的IP
+    private static final String InetIP = "192.168.43.112"; // 服务器的IP
     private static JMenuBar menuBar;
 
     private static int manager = 0;
@@ -78,7 +78,7 @@ public class Manager {
 
             // ------TCP部分👇----------
             ServerSocket serverSocket = new ServerSocket(8888); // 打开监听端口8888
-            addresses.put("Manager : 8888", 1); // 把 自己放入在线列表
+            addresses.put("Manager : 8888", 1); // 把自己放入在线列表
             System.out.println("----监听中----");
             ThreadPoolExecutor threadPool = new ThreadPoolExecutor(20, 40,
                     0L, TimeUnit.MILLISECONDS,
@@ -92,9 +92,30 @@ public class Manager {
             threadPool.submit(whiteboardInfo_thread);
 
             while (true) {
-                Socket socket = serverSocket.accept(); //打开1个数据传输端口
+                Socket socket = serverSocket.accept(); //打开1个数据传输端
                 String ip = socket.getInetAddress().getHostAddress();
                 System.out.println("这是来自于 " + ip + ": " + socket.getPort());
+                //------是否允许新的用户加入👇------
+                OutputStream outputStream = socket.getOutputStream();
+                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
+
+                // 用户名: ip + socket.getPort
+                Object[] options = {"Yes","No"};
+                int n = JOptionPane.showOptionDialog(frame,
+                        "Would you like to approve the access?",
+                        "New user " + ip + socket.getPort() + " applies to join in",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null, options,
+                        options[0]);
+                if (n == 0) {
+                    bufferedWriter.write("ack\n");
+                    bufferedWriter.flush();
+                }else {
+                    bufferedWriter.write("denied\n");
+                    bufferedWriter.flush();
+                    continue;
+                }
 
                 //-----更新在线用户的地址👇-----
                 addresses.put(ip + ":" + socket.getPort(), 1);
@@ -271,6 +292,7 @@ public class Manager {
         if (addresses.size() == 0) {
             return;
         }
+
         for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, Integer> entry = iterator.next();
             String str = entry.getKey();

@@ -35,8 +35,7 @@ public class Connection {
 			}
 			if(jExisted){
 				jExisted = false;
-
-				joiner j = new joiner();
+//				joiner j = new joiner();
 			}
 		}
 	}
