@@ -73,6 +73,7 @@ public class UDPSend {
         byte[] bytes = byteArrayOutputStream.toByteArray();
         DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length, new InetSocketAddress(ip, port));
         datagramSocket.send(datagramPacket);
+        datagramSocket.close();
         System.out.println("已发送" + item);
     }
 }

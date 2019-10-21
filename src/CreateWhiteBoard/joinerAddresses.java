@@ -1,5 +1,6 @@
 package CreateWhiteBoard;
 
+import whiteboard.Canvas;
 import whiteboard.DShapeModel;
 
 import java.rmi.RemoteException;
@@ -18,6 +19,6 @@ public class joinerAddresses extends UnicastRemoteObject implements IjoinerAddre
     }
 
     public ArrayList<DShapeModel> get_whiteBoard_Info() {
-        return Manager.post_whiteboard_info();
+        return Canvas.post_whiteboard_info();
     }
 }

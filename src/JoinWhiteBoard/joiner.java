@@ -8,6 +8,8 @@ import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Hashtable;
@@ -66,6 +68,9 @@ public class joiner {
         start();
     }
 
+    public static int getLocalPort(){
+        return LocalPort;
+    }
 
     public static void start() {
 
@@ -157,8 +162,12 @@ public class joiner {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    whiteboard = new Whiteboard(client);
+                    whiteboard = new Whiteboard(client,LocalPort);
                 } catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                } catch (NotBoundException ex) {
                     ex.printStackTrace();
                 }
             }
