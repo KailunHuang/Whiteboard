@@ -5,6 +5,7 @@
 	import CreateWhiteBoard.UDPSend;
 	import JoinWhiteBoard.UDPReceive;
 	import CreateWhiteBoard.Manager;
+	import JoinWhiteBoard.joiner;
 
 	import java.awt.Color;
 	import java.awt.Dimension;
@@ -219,7 +220,7 @@
 	        
 	    }
 		
-		public void addShape(DShapeModel model) {
+		public void addShape(DShapeModel model) throws IOException {
 //			System.out.println(model);
 			model.setStroke(board.Stroke);
 			System.out.println(board.Stroke);
@@ -237,7 +238,7 @@
 			selected = shape;
 			board.add(shape);
 //			发送新建的shape
-
+			sendAddShape(shape);
 			repaint();
 			}
 		}
@@ -331,7 +332,7 @@
 		}
 
 		public void sendEditShape(){
-			if (board.getMode() == 0){ //manager
+			if (board.getMode() == board.manager){ //manager
 
 			}else{ //other user
 
@@ -339,18 +340,18 @@
 		}
 
 		public void sendDeleteShape(){
-			if (board.getMode() == 0){ //manager
+			if (board.getMode() == board.manager){ //manager
 
 			}else{ //other user
 
 			}
 		}
 
-		public void sendAddShape(){
-			if (board.getMode() == 0){ //manager
+		public void sendAddShape(DShape shape) throws IOException {
+			if (board.getMode() == board.manager){ //manager
 
 			}else{ //other user
-
+				UDPSend.send_whiteboard_info(joiner.InetIP, 4888, new Manager.DShapePackage(shape.model, 0));
 			}
 		}
 

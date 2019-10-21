@@ -68,8 +68,8 @@ public class Whiteboard extends JFrame {
 	private HashMap<String, Integer> fontMap;
 
 	private int mode;
-	private static int manager = 0;
-	private static int client = 1;
+	public static int manager = 0;
+	public static int client = 1;
 
 	public static Hashtable<Integer, DShapeModel> whiteBoard_Info = new Hashtable<>();
 
