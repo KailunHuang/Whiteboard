@@ -79,7 +79,7 @@ public class Whiteboard extends JFrame {
 	public Color penColor;
 	public int Stroke = 1;
 	public int LocalPort = 0;
-	private String serverInetIP;
+	public String serverInetIP;
 
 	public Whiteboard(int mode, int Localport, String InetIP) throws ClassNotFoundException, RemoteException, NotBoundException {
 		this.mode = mode;
