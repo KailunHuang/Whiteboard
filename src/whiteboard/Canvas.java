@@ -3,6 +3,7 @@
 		
 	import CreateWhiteBoard.IjoinerAddresses;
 	import JoinWhiteBoard.UDPReceive;
+	import CreateWhiteBoard.Manager;
 
 	import java.awt.Color;
 	import java.awt.Dimension;
@@ -137,6 +138,7 @@
 	            		if(selected != null){
 	            			selected.moveBy(dx, dy);
 	            			board.updateTable(selected);
+	            			//move
 	            			repaint();
 	            		}
 	            	
@@ -201,6 +203,7 @@
 		public void recolorShape(Color color) {
 			if (selected != null) {
 				selected.setColor(color);
+				//change color
 				repaint();
 			}
 		}
@@ -231,7 +234,8 @@
 				shape = new DLine(model);
 			shapes.add(shape);
 			selected = shape;
-			board.add(shape); 
+			board.add(shape);
+			//发送新建的shape
 			repaint();
 			}
 		}
@@ -242,6 +246,7 @@
 			shapes.remove(selected); 
 			board.delete(selected);
 			selected = null;
+			//发送删除
 			repaint();
 			}
 		} 
@@ -250,12 +255,14 @@
 		public void removeShape(DShape shape){
 			shapes.remove(shape);
 			board.delete(shape);
+
 			repaint();
 		}
 
 		public void updateShape(DShape shape, int index){
 			shapes.set(index, shape);
 			board.updateModel(shape, index);
+
 			repaint();
 		}
 
@@ -264,6 +271,7 @@
 				shapes.remove(selected);
 				shapes.add(selected);
 				board.toFront(selected);
+				//发送添加
 		        repaint();
 				
 			}
@@ -274,6 +282,7 @@
 				shapes.remove(selected);
 				shapes.add(0, selected);
 				board.toBack(selected);
+				//发送删除
 		        repaint();
 				
 			}
@@ -291,6 +300,7 @@
 		public void setText(String text) { 
 		    if(selected()) {
 		        ((DText)selected).setText(text);
+		        //发送修改text
 		        repaint();
 		    }
 		    
@@ -298,7 +308,8 @@
 		
 		public void setFont(String fontName) { 
 		    if(selected()) {
-		        ((DText)selected).setFont(fontName); 
+		        ((DText)selected).setFont(fontName);
+		        //发送修改font
 		        repaint();
 		    }
 		} 
@@ -317,7 +328,17 @@
 				return false;
 		}
 
+		public void sendEditShape(){
 
+		}
+
+		public void sendDeleteShape(){
+
+		}
+
+		public void sendAddShape(){
+
+		}
 
 		//-----------THREAD CLASS---------------------//
 
@@ -339,18 +360,16 @@
 					while (true) {
 						String str = UDPReceive.receive(port);
 						System.out.println("收到了信息：" + str);
-						if (str.charAt(2) == '+') { // 这里是单纯的添加了新的图形
-							whiteboard_info = remoteAddress.get_whiteBoard_Info();
+						whiteboard_info = remoteAddress.get_whiteBoard_Info();
+						int modified_index = Integer.parseInt(str.substring(2));
+						if (modified_index == 0) { // 这里是单纯的添加了新的图形
 							addShapesFromHashTable(whiteboard_info);
-						} else if (str.charAt(2) == '-'){ //这里将arraylist中的图形给删掉
-							int motified_index = Integer.parseInt(str.substring(3));
-							deletShapesFromHashTable(motified_index);
+						} else if (modified_index < 0){ //这里将arraylist中的图形给删掉
+							int true_index = Math.abs(modified_index);
+							deletShapesFromHashTable(true_index);
 						}
 						else { //修改某一个图形
-							int motified_index = Integer.parseInt(str.substring(2));
-							whiteboard_info = remoteAddress.get_whiteBoard_Info();
-							editShapeFromHashTable(whiteboard_info, motified_index);
-
+							editShapeFromHashTable(whiteboard_info, modified_index);
 						}
 					}
 				} catch (IOException | NotBoundException e) {
@@ -363,6 +382,9 @@
 				int htSize = hashtable.size();
 				if (htSize > arraySize){
 					for (int i = arraySize; i < htSize; i++){
+						if (hashtable.get(i)==null){
+							continue;
+						}
 						canvas.addShape(hashtable.get(i));
 					}
 				}
