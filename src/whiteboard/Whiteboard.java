@@ -25,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.util.*;
 
 import javax.swing.Box;
@@ -76,9 +78,11 @@ public class Whiteboard extends JFrame {
 	public boolean eraser = false;
 	public Color penColor;
 	public int Stroke = 1;
+	public int LocalPort = 0;
 
-	public Whiteboard(int mode) throws ClassNotFoundException {
-
+	public Whiteboard(int mode, int Localport) throws ClassNotFoundException, RemoteException, NotBoundException {
+		this.mode = mode;
+		this.LocalPort = Localport;
 		board = new JFrame("Whiteboard");
 		getContentPane().setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

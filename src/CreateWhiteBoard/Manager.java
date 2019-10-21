@@ -15,6 +15,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.*;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.ArrayList;
@@ -42,7 +44,7 @@ public class Manager {
     private static JTextField textField;
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
-    private static final String InetIP = "192.168.43.112"; // 服务器的IP
+    public static final String InetIP = "192.168.43.200"; // 服务器的IP
     private static JMenuBar menuBar;
 
     private static int manager = 0;
@@ -96,7 +98,7 @@ public class Manager {
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
 
                 // 用户名: ip + socket.getPort
-                Object[] options = {"Yes","No"};
+                Object[] options = {"Yes", "No"};
                 int n = JOptionPane.showOptionDialog(frame,
                         "Would you like to approve the access?",
                         "New user " + ip + socket.getPort() + " applies to join in",
@@ -107,7 +109,7 @@ public class Manager {
                 if (n == 0) {
                     bufferedWriter.write("ack\n");
                     bufferedWriter.flush();
-                }else {
+                } else {
                     bufferedWriter.write("denied\n");
                     bufferedWriter.flush();
                     continue;
@@ -194,8 +196,12 @@ public class Manager {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Whiteboard whiteboard = new Whiteboard(manager);
+                    Whiteboard whiteboard = new Whiteboard(manager, 4888);
                 } catch (ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                } catch (RemoteException ex) {
+                    ex.printStackTrace();
+                } catch (NotBoundException ex) {
                     ex.printStackTrace();
                 }
             }
@@ -332,13 +338,15 @@ public class Manager {
         }
     }
 
-    private static void send_update_whiteboard(int index) throws IOException {
+    public static void send_update_whiteboard(int index) throws IOException {
+
         if (addresses.size() == 0) {
             return;
         }
         for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, Integer> entry = iterator.next();
             String str = entry.getKey();
+            System.out.println("通知 " + str + " 更新");
             if (str.equals("Manager : 8888")) {
                 continue;
             }
@@ -354,21 +362,16 @@ public class Manager {
     }
 
 
-    public static ArrayList<DShapeModel> post_whiteboard_info() {
-        return whiteBoard_Info;
-    }
-
-
-    private static void printHashtable(Hashtable<String, Integer> hashtable) {
+    public static void printHashtable(Hashtable<String, Integer> hashtable) {
         for (Iterator<Map.Entry<String, Integer>> iterator = hashtable.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, Integer> entry = iterator.next();
             System.out.println(entry.getKey());
         }
     }
 
-    private static void print_whiteboard_info(ArrayList<DShapeModel> arrayList) {
+    public static void print_whiteboard_info(ArrayList<DShapeModel> arrayList) {
         System.out.println("当前的whiteboard_info：");
-        for (int i = 1; i <= arrayList.size(); i++) {
+        for (int i = 0; i < arrayList.size(); i++) {
             System.out.println(i + " : " + arrayList.get(i));
         }
     }
