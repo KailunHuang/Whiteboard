@@ -109,4 +109,7 @@ public class joinerInitialize {
 	public Socket getSocket(){
 		return socket;
 	}
+	public String getServerIPAddress(){
+		return serverIPAddress;
+	}
 }
