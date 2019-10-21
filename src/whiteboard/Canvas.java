@@ -2,6 +2,7 @@
 	
 		
 	import CreateWhiteBoard.IjoinerAddresses;
+	import CreateWhiteBoard.UDPSend;
 	import JoinWhiteBoard.UDPReceive;
 	import CreateWhiteBoard.Manager;
 
@@ -235,7 +236,8 @@
 			shapes.add(shape);
 			selected = shape;
 			board.add(shape);
-			//发送新建的shape
+//			发送新建的shape
+
 			repaint();
 			}
 		}
@@ -329,15 +331,27 @@
 		}
 
 		public void sendEditShape(){
+			if (board.getMode() == 0){ //manager
 
+			}else{ //other user
+
+			}
 		}
 
 		public void sendDeleteShape(){
+			if (board.getMode() == 0){ //manager
 
+			}else{ //other user
+
+			}
 		}
 
 		public void sendAddShape(){
+			if (board.getMode() == 0){ //manager
 
+			}else{ //other user
+
+			}
 		}
 
 		//-----------THREAD CLASS---------------------//
@@ -386,6 +400,7 @@
 							continue;
 						}
 						canvas.addShape(hashtable.get(i));
+						canvas.board.whiteBoard_Info.put(i, hashtable.get(i));
 					}
 				}
 			}
@@ -395,6 +410,7 @@
 				if (index < arraySize){
 					DShape shape =  canvas.shapes.get(index);
 					canvas.removeShape(shape);
+					canvas.board.whiteBoard_Info.put(index, null);
 				}
 			}
 
@@ -402,6 +418,7 @@
 				DShapeModel model = hashtable.get(index);
 				DShape shape = buildShapeByModel(model);
 				canvas.updateShape(shape, index);
+				canvas.board.whiteBoard_Info.put(index, model);
 			}
 
 			public DShape buildShapeByModel(DShapeModel model){

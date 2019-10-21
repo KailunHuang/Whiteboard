@@ -70,7 +70,8 @@ public class Whiteboard extends JFrame {
 	private int mode;
 	private static int manager = 0;
 	private static int client = 1;
-	private static Hashtable<Integer, DShapeModel> whiteBoard_Info = new Hashtable<>();
+
+	public static Hashtable<Integer, DShapeModel> whiteBoard_Info = new Hashtable<>();
 
 	public boolean freehand = false;
 	public boolean eraser = false;
