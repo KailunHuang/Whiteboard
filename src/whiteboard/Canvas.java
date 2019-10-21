@@ -246,7 +246,7 @@
 			selected = shape;
 			board.add(shape);
 //			发送新建的shape
-			sendAddShape(shape);
+//			sendAddShape(shape);
 			repaint();
 			}
 		}
@@ -355,13 +355,13 @@
 			}
 		}
 
-		public void sendAddShape(DShape shape) throws IOException {
-			if (board.getMode() == board.manager){ //manager
-
-			}else{ //other user
-				UDPSend.send_whiteboard_info(joiner.InetIP, 4888, new Manager.DShapePackage(shape.model, 0));
-			}
-		}
+//		public void sendAddShape(DShape shape) throws IOException {
+//			if (board.getMode() == board.manager){ //manager
+//
+//			}else{ //other user
+//				UDPSend.send_whiteboard_info(joiner.InetIP, 4888, new Manager.DShapePackage(shape.model, 0));
+//			}
+//		}
 
 		//-----------THREAD CLASS---------------------//
 
@@ -383,7 +383,7 @@
 					while (true) {
 						String str = UDPReceive.receive(port);
 						System.out.println("收到了信息：" + str);
-						whiteboard_info = remoteAddress.get_whiteBoard_Info();
+//						whiteboard_info = remoteAddress.get_whiteBoard_Info();
 						int modified_index = Integer.parseInt(str.substring(2));
 						if (modified_index == 0) { // 这里是单纯的添加了新的图形
 							addShapesFromHashTable(whiteboard_info);

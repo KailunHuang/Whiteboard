@@ -1,7 +1,6 @@
 package whiteboard;
 
-import CreateWhiteBoard.Manager;
-import CreateWhiteBoard.Manager.reveive_whiteboardInfo_Thread;
+
 
 import java.awt.BorderLayout;
 
@@ -723,14 +722,5 @@ public class Whiteboard extends JFrame {
 	public int getMode(){
 		return mode;
 	}
-
-
-	public static void main(String args[]) throws ClassNotFoundException {
-
-		Whiteboard whiteboard = new Whiteboard(manager);
-		reveive_whiteboardInfo_Thread whiteboardInfo_thread = new reveive_whiteboardInfo_Thread(8888 - 4000);
-		whiteboardInfo_thread.start();
-	}
-
 
 }
