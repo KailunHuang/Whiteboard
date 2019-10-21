@@ -9,6 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import CreateWhiteBoard.Manager.DShapePackage;
 
 public class UDPSend {
     public static void update(String ip, int port) throws IOException {
@@ -52,9 +53,9 @@ public class UDPSend {
         datagramSocket.close();
     }
 
-    public static void update_whiteboard_table(String ip, int port, int motified_index) throws IOException {
+    public static void update_whiteboard_table(String ip, int port) throws IOException {
         DatagramSocket datagramSocket = new DatagramSocket();
-        String str = "/w" + motified_index;
+        String str = "/w";
         byte[] datagram = str.getBytes();
         DatagramPacket datagramPacket = new DatagramPacket(datagram, datagram.length);
         datagramPacket.setSocketAddress(new InetSocketAddress(ip, port));
@@ -62,7 +63,7 @@ public class UDPSend {
         datagramSocket.close();
     }
 
-    public static void send_whiteboard_info(String ip, int port, DShapeModel item) throws IOException {
+    public static void send_whiteboard_info(String ip, int port, DShapePackage item) throws IOException {
         DatagramSocket datagramSocket = new DatagramSocket();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
