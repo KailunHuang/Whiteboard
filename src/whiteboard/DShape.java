@@ -23,7 +23,6 @@ public abstract class DShape implements ModelListener {
 	
 	public DShapeModel bounds() {
 		return model;
-		
 	}
 	
 	public Rectangle getBounds() { 

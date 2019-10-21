@@ -4,6 +4,7 @@ import whiteboard.DShapeModel;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class joinerAddresses extends UnicastRemoteObject implements IjoinerAddresses {
@@ -16,7 +17,7 @@ public class joinerAddresses extends UnicastRemoteObject implements IjoinerAddre
         return Manager.postHashtable();
     }
 
-    public Hashtable<Integer, DShapeModel> get_whiteBoard_Info() {
+    public ArrayList<DShapeModel> get_whiteBoard_Info() {
         return Manager.post_whiteboard_info();
     }
 }

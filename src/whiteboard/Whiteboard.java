@@ -1,5 +1,8 @@
 package whiteboard;
 
+import CreateWhiteBoard.Manager;
+import CreateWhiteBoard.Manager.reveive_whiteboardInfo_Thread;
+
 import java.awt.BorderLayout;
 
 import java.awt.Color;
@@ -23,10 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -68,8 +68,10 @@ public class Whiteboard extends JFrame {
 	private HashMap<String, Integer> fontMap;
 
 	private int mode;
-	private static int manager = 0;
-	private static int client = 1;
+	public static int manager = 0;
+	public static int client = 1;
+
+	public static Hashtable<Integer, DShapeModel> whiteBoard_Info = new Hashtable<>();
 
 	public boolean freehand = false;
 	public boolean eraser = false;
@@ -173,6 +175,7 @@ public class Whiteboard extends JFrame {
 
 		JMenuItem mntmMoveToFront = new JMenuItem("Move to Front");
 		mnEdit.add(mntmMoveToFront);
+
 
 		// MenuAddShape
 		JMenu mnAddShape = new JMenu("Add Shape");
@@ -303,7 +306,11 @@ public class Whiteboard extends JFrame {
 				DLineModel model = new DLineModel(p1,p2,penColor);
 
 				//model.setPoints(p1,p2);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -311,7 +318,11 @@ public class Whiteboard extends JFrame {
 		btnAddOval.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DOvalModel model = new DOvalModel(25,25,100,100, penColor);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -319,7 +330,11 @@ public class Whiteboard extends JFrame {
 		btnAddRectangle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DRectModel model = new DRectModel(25,25,100,100, penColor);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -329,7 +344,11 @@ public class Whiteboard extends JFrame {
 				String s = textField.getText();
 				DTextModel model = new DTextModel();
 				model.setBounds(20, 20, 415, 80);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -511,7 +530,11 @@ public class Whiteboard extends JFrame {
 				Point p2 = new Point(75,75);
 				DLineModel model = new DLineModel(p1,p2,penColor);
 				//model.setPoints(p1,p2);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -519,7 +542,11 @@ public class Whiteboard extends JFrame {
 		mntmAddOval.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DOvalModel model = new DOvalModel(25,25,100,100, penColor);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -527,7 +554,11 @@ public class Whiteboard extends JFrame {
 		mntmAddRectangle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				DRectModel model = new DRectModel(25,25,100,100, penColor);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -537,7 +568,11 @@ public class Whiteboard extends JFrame {
 				String s = textField.getText();
 				DTextModel model = new DTextModel();
 				model.setBounds(20, 20, 415, 80);
-				canvas.addShape(model);
+				try {
+					canvas.addShape(model);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 				canvas.repaint();
 			}
 		});
@@ -693,6 +728,9 @@ public class Whiteboard extends JFrame {
 	public static void main(String args[]) throws ClassNotFoundException {
 
 		Whiteboard whiteboard = new Whiteboard(manager);
+		reveive_whiteboardInfo_Thread whiteboardInfo_thread = new reveive_whiteboardInfo_Thread(8888 - 4000);
+		whiteboardInfo_thread.start();
 	}
+
 
 }
