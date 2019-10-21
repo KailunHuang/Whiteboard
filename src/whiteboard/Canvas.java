@@ -288,6 +288,7 @@ public class Canvas extends JPanel {
             Manager.print_whiteboard_info(whiteboard_info);
             selected = null;
             //发送删除
+            
             repaint();
         }
     }

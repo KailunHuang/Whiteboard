@@ -41,8 +41,8 @@ public class joiner {
     private static Socket socket;
     private static JFrame frame;
     private static JTable table;
-    private static String InetIP;
-//    private static String InetIP = "192.168.43.200"; //服务端IP
+//    private static String InetIP;
+    private static String InetIP = "192.168.43.200"; //服务端IP
     // 凯凯: 192.168.43.175 小陆: 192.168.43.200
     public static final String LocalInetIP = "192.168.43.200"; //自己的IP
     public static int LocalPort = 0;
