@@ -45,7 +45,12 @@ public class TableModel extends AbstractTableModel implements ModelListener{
         models.remove(shapeModel); 
         fireTableDataChanged(); 
     } 
-    
+
+    public void updateModel(DShapeModel shapeModel, int index){
+        models.set(index, shapeModel);
+        fireTableDataChanged();
+    }
+
     public void clear() { 
         models.clear(); 
         fireTableDataChanged(); 

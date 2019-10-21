@@ -1,7 +1,5 @@
 package whiteboard;
-import java.awt.Graphics;
-import java.awt.Rectangle;
-import java.awt.Color;
+import java.awt.*;
 
 public class DRect extends DShape{
 	
@@ -17,7 +15,8 @@ public class DRect extends DShape{
 
 	public void draw(Graphics g, boolean selected){
 		
-		Rectangle bounds = model.getBounds(); 
+		Rectangle bounds = model.getBounds();
+		((Graphics2D)g).setStroke(new BasicStroke(model.getStroke()));
 		g.setColor(model.getColor());
 		g.fillRect(bounds.x, bounds.y, bounds.width, bounds.height);
 		g.setColor(Color.BLACK);
