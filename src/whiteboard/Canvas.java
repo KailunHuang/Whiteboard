@@ -439,7 +439,7 @@ public class Canvas extends JPanel {
 			if (board.getMode() == board.manager){ //manager
 
 			}else{ //other user
-				UDPSend.send_whiteboard_info(joiner.InetIP, 4888, new Manager.DShapePackage(shape.model, 0));
+//				UDPSend.send_whiteboard_info(joiner.InetIP, 4888, new Manager.DShapePackage(shape.model, 0));
 			}
 		}
 
