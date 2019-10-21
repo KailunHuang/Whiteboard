@@ -1,22 +1,23 @@
 	package whiteboard;
 	
 		
+	import CreateWhiteBoard.IjoinerAddresses;
+	import JoinWhiteBoard.UDPReceive;
+
 	import java.awt.Color;
 	import java.awt.Dimension;
 	import java.awt.Graphics;
 	import java.awt.Point;
 	import java.awt.Rectangle;
-	import java.awt.event.ActionEvent;
-	import java.awt.event.ActionListener;
 	import java.awt.event.MouseAdapter;
 	import java.awt.event.MouseEvent;
 	import java.awt.event.MouseMotionAdapter;
-	import java.io.Serializable;
+	import java.io.IOException;
+	import java.rmi.NotBoundException;
+	import java.rmi.registry.LocateRegistry;
+	import java.rmi.registry.Registry;
 	import java.util.*;
 
-	import javax.swing.JButton;
-	import javax.swing.JColorChooser;
-	import javax.swing.JFrame;
 	import javax.swing.JPanel;
 	
 	public class Canvas extends JPanel {
@@ -35,7 +36,11 @@
 		
 		private Point p_start, p_drag;
 		private int x_start, y_start;
-		private int x_drag, y_drag; 
+		private int x_drag, y_drag;
+
+		private static IjoinerAddresses remoteAddress;
+		private static Registry registry;
+		private static Hashtable<Integer, DShapeModel> whiteboard_info = new Hashtable<>();
 		
 		public Canvas(Whiteboard board) throws ClassNotFoundException {
 			this.board = board;
@@ -211,7 +216,9 @@
 	    }
 		
 		public void addShape(DShapeModel model) {
-			System.out.println(model);
+//			System.out.println(model);
+			model.setStroke(board.Stroke);
+			System.out.println(board.Stroke);
 			if(board.getMode() != 2){
 			DShape shape = null;
 			if (model instanceof DOvalModel)
@@ -238,7 +245,20 @@
 			repaint();
 			}
 		} 
-	
+
+//		overriding removeShape
+		public void removeShape(DShape shape){
+			shapes.remove(shape);
+			board.delete(shape);
+			repaint();
+		}
+
+		public void updateShape(DShape shape, int index){
+			shapes.set(index, shape);
+			board.updateModel(shape, index);
+			repaint();
+		}
+
 		public void toFront() {
 			if (selected()) {
 				shapes.remove(selected);
@@ -297,21 +317,85 @@
 				return false;
 		}
 
-		public void updateArrayListByHT(Hashtable<Integer, DShape> shapeTable){
-			int sizeOfHT = shapeTable.size();
-			int maximumSize = this.shapes.size();
-			Set<Integer> keys = shapeTable.keySet();
-			for (int i =0 ; i< sizeOfHT; i++){
-				if (i > maximumSize){ //key value is started from 1
-					this.shapes.add(shapeTable.get(i));
+
+
+		//-----------THREAD CLASS---------------------//
+
+		static class createThread extends Thread {
+			private int port;
+			private String InetIP;
+			private Canvas canvas;
+
+			public createThread(String InetIP, int port, Canvas canvas) {
+				this.port = port;
+				this.InetIP = InetIP;
+				this.canvas = canvas;
+			}
+
+			public synchronized void run() {
+				try {
+					registry = LocateRegistry.getRegistry(InetIP, 1099);
+					remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
+					while (true) {
+						String str = UDPReceive.receive(port);
+						System.out.println("收到了信息：" + str);
+						if (str.charAt(2) == '+') { // 这里是单纯的添加了新的图形
+							whiteboard_info = remoteAddress.get_whiteBoard_Info();
+							addShapesFromHashTable(whiteboard_info);
+						} else if (str.charAt(2) == '-'){ //这里将arraylist中的图形给删掉
+							int motified_index = Integer.parseInt(str.substring(3));
+							deletShapesFromHashTable(motified_index);
+						}
+						else { //修改某一个图形
+							int motified_index = Integer.parseInt(str.substring(2));
+							whiteboard_info = remoteAddress.get_whiteBoard_Info();
+							editShapeFromHashTable(whiteboard_info, motified_index);
+
+						}
+					}
+				} catch (IOException | NotBoundException e) {
+					e.printStackTrace();
 				}
+			}
+
+			public void addShapesFromHashTable(Hashtable<Integer, DShapeModel> hashtable){
+				int arraySize = canvas.shapes.size();
+				int htSize = hashtable.size();
+				if (htSize > arraySize){
+					for (int i = arraySize; i < htSize; i++){
+						canvas.addShape(hashtable.get(i));
+					}
+				}
+			}
+
+			public void deletShapesFromHashTable(int index){
+				int arraySize = canvas.shapes.size();
+				if (index < arraySize){
+					DShape shape =  canvas.shapes.get(index);
+					canvas.removeShape(shape);
+				}
+			}
+
+			public void editShapeFromHashTable(Hashtable<Integer, DShapeModel> hashtable, int index){
+				DShapeModel model = hashtable.get(index);
+				DShape shape = buildShapeByModel(model);
+				canvas.updateShape(shape, index);
+			}
+
+			public DShape buildShapeByModel(DShapeModel model){
+				DShape shape = null;
+				if (model instanceof DOvalModel)
+					shape = new DOval(model);
+				else if (model instanceof DTextModel)
+					shape = new DText(model);
+				else if (model instanceof DRectModel)
+					shape = new DRect(model);
+				else if (model instanceof DLineModel)
+					shape = new DLine(model);
+				return shape;
 			}
 		}
 
-		public void editArrayListByHT(Hashtable<Integer, DShape> shapeTable, int index){
-			this.shapes.set(index, shapeTable.get(index));
-			updateArrayListByHT(shapeTable);
-		}
 
 	}
 		
