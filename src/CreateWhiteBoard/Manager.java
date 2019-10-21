@@ -17,6 +17,7 @@ import java.io.*;
 import java.net.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -32,7 +33,7 @@ public class Manager {
 
     private static Hashtable<String, Integer> addresses = new Hashtable<>();
     private static Hashtable<String, Socket> socketList = new Hashtable<>();
-    private static Hashtable<Integer, DShapeModel> whiteBoard_Info = new Hashtable<>();
+    private static ArrayList<DShapeModel> whiteBoard_Info = new ArrayList<>();
     private static String[] columnNames = {"Online Users"};
     private static String[][] data = new String[10][1];
     private static JTextField sendArea;
@@ -331,7 +332,7 @@ public class Manager {
     }
 
 
-    public static Hashtable<Integer, DShapeModel> post_whiteboard_info() {
+    public static ArrayList<DShapeModel> post_whiteboard_info() {
         return whiteBoard_Info;
     }
 
@@ -343,10 +344,10 @@ public class Manager {
         }
     }
 
-    private static void print_whiteboard_info(Hashtable<Integer, DShapeModel> hashtable) {
+    private static void print_whiteboard_info(ArrayList<DShapeModel> arrayList) {
         System.out.println("当前的whiteboard_info：");
-        for (int i = 1; i <= hashtable.size(); i++) {
-            System.out.println(i + " : " + hashtable.get(i));
+        for (int i = 1; i <= arrayList.size(); i++) {
+            System.out.println(i + " : " + arrayList.get(i));
         }
     }
 
@@ -380,39 +381,6 @@ public class Manager {
                     }
                 }
             } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public static int whiteboard_index = 1;
-
-    public static class reveive_whiteboardInfo_Thread extends Thread {
-        private int port;
-
-        public reveive_whiteboardInfo_Thread(int port) {
-            this.port = port;
-        }
-
-        public synchronized void run() {
-            try {
-                while (true) {
-                    DShapePackage dShapePackage = UDPReceive.receive_whiteboard_info(port);
-                    System.out.println("收到了信息：" + dShapePackage.dShapeModel + ", " + dShapePackage.index);
-                    if (dShapePackage.index == 0) { // 直接添加到whitboard_info
-                        whiteBoard_Info.put(whiteboard_index, dShapePackage.dShapeModel);
-                        whiteboard_index++;
-                    } else if (dShapePackage.index < 0) { //删除
-                        whiteBoard_Info.remove(-1 * dShapePackage.index, dShapePackage.dShapeModel);
-                    } else {//修改其中一个
-                        whiteBoard_Info.put(dShapePackage.index, dShapePackage.dShapeModel);
-                    }
-                    //让大家更新
-                    System.out.println("whiteBoard_Info的size: " + whiteBoard_Info.size());
-                    print_whiteboard_info(whiteBoard_Info);
-                    send_update_whiteboard(dShapePackage.index);
-                }
-            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
