@@ -176,6 +176,7 @@ public class Whiteboard extends JFrame {
 		JMenuItem mntmMoveToFront = new JMenuItem("Move to Front");
 		mnEdit.add(mntmMoveToFront);
 
+
 		// MenuAddShape
 		JMenu mnAddShape = new JMenu("Add Shape");
 		mnAddShape.setBackground(Color.WHITE);
