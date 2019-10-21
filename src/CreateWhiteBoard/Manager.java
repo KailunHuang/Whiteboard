@@ -101,7 +101,7 @@ public class Manager {
                 Object[] options = {"Yes", "No"};
                 int n = JOptionPane.showOptionDialog(frame,
                         "Would you like to approve the access?",
-                        "New user " + ip + socket.getPort() + " applies to join in",
+                        "New user " + ip + socket.getPort() + " applies to join",
                         JOptionPane.YES_NO_OPTION,
                         JOptionPane.QUESTION_MESSAGE,
                         null, options,
@@ -196,7 +196,7 @@ public class Manager {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Whiteboard whiteboard = new Whiteboard(manager, 4888);
+                    Whiteboard whiteboard = new Whiteboard(manager, 4888, InetIP);
                 } catch (ClassNotFoundException ex) {
                     ex.printStackTrace();
                 } catch (RemoteException ex) {

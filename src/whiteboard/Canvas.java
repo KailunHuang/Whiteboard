@@ -61,7 +61,7 @@ public class Canvas extends JPanel {
         movingKnob = null;
         setVisible(true);
 
-        registry = LocateRegistry.getRegistry("192.168.43.200", 1099);
+        registry = LocateRegistry.getRegistry("192.168.43.175", 1099);
         remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
         System.out.println("身份标示符：" + board.getMode());
         if (board.getMode() == board.manager) {
