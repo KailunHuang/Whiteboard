@@ -269,7 +269,7 @@ public class Canvas extends JPanel {
             if (board.getMode() == board.client) {
                 System.out.println("传输图形给Server");
                 DShapePackage dShapePackage = new DShapePackage(model, 0);
-                UDPSend.send_whiteboard_info(Manager.InetIP, 4888, dShapePackage);
+                UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
                 System.out.println("已发送图形");
             } else {
                 Manager.send_update_whiteboard(0);
