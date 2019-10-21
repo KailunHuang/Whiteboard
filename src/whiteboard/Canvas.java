@@ -103,10 +103,10 @@
 	                    y_drag = e.getY();
 	                    p_start = new Point(x_start, y_start);
 	                    p_drag = new Point(x_drag, y_drag);
-	                    DLineModel model = new DLineModel(p_start, p_drag);
+	                    DLineModel model = new DLineModel(p_start, p_drag, board.penColor);
 //	                    System.out.println(board.freehandColor);
 	                    // Set Pen Color
-	                    model.setColor(board.freehandColor);
+	                    model.setColor(board.penColor);
 	                    model.setStroke(board.Stroke);
 	    				addShape(model);
 	    				repaint();
