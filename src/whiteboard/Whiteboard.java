@@ -1,5 +1,8 @@
 package whiteboard;
 
+import CreateWhiteBoard.Manager;
+import CreateWhiteBoard.Manager.reveive_whiteboardInfo_Thread;
+
 import java.awt.BorderLayout;
 
 import java.awt.Color;
@@ -23,10 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
+import java.util.*;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -70,6 +70,7 @@ public class Whiteboard extends JFrame {
 	private int mode;
 	private static int manager = 0;
 	private static int client = 1;
+	private static Hashtable<Integer, DShapeModel> whiteBoard_Info = new Hashtable<>();
 
 	public boolean freehand = false;
 	public boolean eraser = false;
@@ -693,6 +694,9 @@ public class Whiteboard extends JFrame {
 	public static void main(String args[]) throws ClassNotFoundException {
 
 		Whiteboard whiteboard = new Whiteboard(manager);
+		reveive_whiteboardInfo_Thread whiteboardInfo_thread = new reveive_whiteboardInfo_Thread(8888 - 4000);
+		whiteboardInfo_thread.start();
 	}
+
 
 }
