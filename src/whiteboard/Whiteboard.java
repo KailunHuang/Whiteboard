@@ -79,10 +79,12 @@ public class Whiteboard extends JFrame {
 	public Color penColor;
 	public int Stroke = 1;
 	public int LocalPort = 0;
+	private String serverInetIP;
 
-	public Whiteboard(int mode, int Localport) throws ClassNotFoundException, RemoteException, NotBoundException {
+	public Whiteboard(int mode, int Localport, String InetIP) throws ClassNotFoundException, RemoteException, NotBoundException {
 		this.mode = mode;
 		this.LocalPort = Localport;
+		this.serverInetIP = InetIP;
 		board = new JFrame("Whiteboard");
 		getContentPane().setLayout(new BorderLayout());
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

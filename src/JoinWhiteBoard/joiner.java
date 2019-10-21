@@ -41,14 +41,14 @@ public class joiner {
     private static Socket socket;
     private static JFrame frame;
     private static JTable table;
-    private static String InetIP = "192.168.43.175"; //服务端IP
+    private static String InetIP;
+//    private static String InetIP = "192.168.43.200"; //服务端IP
     // 凯凯: 192.168.43.175 小陆: 192.168.43.200
     public static final String LocalInetIP = "192.168.43.112"; //自己的IP
     public static int LocalPort = 0;
     private static JButton btnWhiteboard;
     private static JMenuBar menuBar;
     private static Whiteboard whiteboard;
-
 
     private static int client = 1;
 
@@ -162,7 +162,7 @@ public class joiner {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    whiteboard = new Whiteboard(client,LocalPort);
+                    whiteboard = new Whiteboard(client, LocalPort, InetIP);
                 } catch (ClassNotFoundException ex) {
                     ex.printStackTrace();
                 } catch (RemoteException ex) {
