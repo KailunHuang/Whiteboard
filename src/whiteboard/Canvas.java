@@ -396,8 +396,10 @@ public class Canvas extends JPanel {
                         whiteboard_info = remoteAddress.get_whiteBoard_Info();
                         Manager.print_whiteboard_info(whiteboard_info);
                         ArrayList<DShape> newShapes = new ArrayList<>();
+                        canvas.board.tableModel.clear();
                         for (int i = 0; i < whiteboard_info.size(); i++) {
                             newShapes.add(buildShapeByModel(whiteboard_info.get(i)));
+                            canvas.board.tableModel.add(whiteboard_info.get(i));
                         }
                         canvas.shapes = newShapes;
                         canvas.repaint();

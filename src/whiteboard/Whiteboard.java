@@ -65,7 +65,7 @@ public class Whiteboard extends JFrame {
 	// Initial the variables
 	private Canvas canvas;
 	private DShape selectedShape;
-	private TableModel tableModel;
+	public TableModel tableModel;
 	private HashMap<String, Integer> fontMap;
 
 	private int mode;
