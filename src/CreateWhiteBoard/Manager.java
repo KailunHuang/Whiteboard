@@ -15,10 +15,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.*;
-import java.rmi.NotBoundException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -87,9 +85,6 @@ public class Manager {
             //------接收message的线程👇------
             receiveMessageThread receiveMessageThread = new receiveMessageThread(8888 - 3000);
             threadPool.submit(receiveMessageThread);
-            //------接收白板更新的线程👇------
-            reveive_whiteboardInfo_Thread whiteboardInfo_thread = new reveive_whiteboardInfo_Thread(8888 - 4000);
-            threadPool.submit(whiteboardInfo_thread);
 
             while (true) {
                 Socket socket = serverSocket.accept(); //打开1个数据传输端口
@@ -314,7 +309,7 @@ public class Manager {
         }
     }
 
-    private static void send_update_whiteboard() throws IOException {
+    private static void send_update_whiteboard(int index) throws IOException {
         if (addresses.size() == 0) {
             return;
         }
@@ -327,7 +322,7 @@ public class Manager {
             String ip = str.split(":")[0].trim();
             int port = Integer.parseInt(str.split(":")[1].trim());
 
-            UDPSend.update_whiteboard_table(ip, port - 4000);
+            UDPSend.update_whiteboard_table(ip, port - 4000, index);
         }
     }
 
@@ -345,6 +340,12 @@ public class Manager {
         for (Iterator<Map.Entry<String, Integer>> iterator = hashtable.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, Integer> entry = iterator.next();
             System.out.println(entry.getKey());
+        }
+    }
+
+    private static void print_whiteboard_info(Hashtable<Integer, DShapeModel> hashtable) {
+        for (int i = 1; i <= hashtable.size(); i++) {
+            System.out.println(i + " : " + hashtable.get(i));
         }
     }
 
@@ -383,7 +384,7 @@ public class Manager {
         }
     }
 
-    static class reveive_whiteboardInfo_Thread extends Thread {
+    public static class reveive_whiteboardInfo_Thread extends Thread {
         private int port;
 
         public reveive_whiteboardInfo_Thread(int port) {
@@ -395,13 +396,16 @@ public class Manager {
                 while (true) {
                     DShapePackage dShapePackage = UDPReceive.receive_whiteboard_info(port);
                     System.out.println("收到了信息：" + dShapePackage.dShapeModel + ", " + dShapePackage.index);
-                    if (dShapePackage.index == -1) { // 直接添加到whitboard_info
-                        whiteBoard_Info.put(whiteBoard_Info.size(), dShapePackage.dShapeModel);
-                    } else { //修改其中一个
+                    if (dShapePackage.index == 0) { // 直接添加到whitboard_info
+                        whiteBoard_Info.put(whiteBoard_Info.size() + 1, dShapePackage.dShapeModel);
+                    } else if (dShapePackage.index < 0) { //删除
+                        whiteBoard_Info.remove(-1 * dShapePackage.index, dShapePackage.dShapeModel);
+                    }else{//修改其中一个
                         whiteBoard_Info.put(dShapePackage.index, dShapePackage.dShapeModel);
                     }
                     //让大家更新
-                    send_update_whiteboard();
+                    print_whiteboard_info(whiteBoard_Info);
+                    send_update_whiteboard(dShapePackage.index);
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -410,10 +414,10 @@ public class Manager {
     }
 
     public static class DShapePackage implements Serializable {
-        DShapeModel dShapeModel = null;
-        int index = -1;
+        public DShapeModel dShapeModel = null;
+        public int index = -1;
 
-        DShapePackage(DShapeModel dShapeModel, int index) {
+        public DShapePackage(DShapeModel dShapeModel, int index) {
             this.dShapeModel = dShapeModel;
             this.index = index;
         }

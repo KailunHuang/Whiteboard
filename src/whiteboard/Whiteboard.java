@@ -73,7 +73,7 @@ public class Whiteboard extends JFrame {
 
 	public boolean freehand = false;
 	public boolean eraser = false;
-	public Color freehandColor;
+	public Color penColor;
 	public int Stroke = 1;
 
 	public Whiteboard(int mode) throws ClassNotFoundException {
@@ -165,8 +165,8 @@ public class Whiteboard extends JFrame {
 		JMenuItem mntmClearAll = new JMenuItem("Clear All");
 		mnEdit.add(mntmClearAll);
 
-		JMenuItem mntmSetColor = new JMenuItem("Reset Color");
-		mnEdit.add(mntmSetColor);
+//		JMenuItem mntmSetColor = new JMenuItem("Reset Color");
+//		mnEdit.add(mntmSetColor);
 
 		JMenuItem mntmMoveToBack = new JMenuItem("Move to Back");
 		mnEdit.add(mntmMoveToBack);
@@ -300,7 +300,7 @@ public class Whiteboard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				Point p1 = new Point(25,25);
 				Point p2 = new Point(75,75);
-				DLineModel model = new DLineModel(p1,p2);
+				DLineModel model = new DLineModel(p1,p2,penColor);
 
 				//model.setPoints(p1,p2);
 				canvas.addShape(model);
@@ -310,7 +310,7 @@ public class Whiteboard extends JFrame {
 
 		btnAddOval.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DOvalModel model = new DOvalModel(25,25,100,100,Color.gray);
+				DOvalModel model = new DOvalModel(25,25,100,100, penColor);
 				canvas.addShape(model);
 				canvas.repaint();
 			}
@@ -318,7 +318,7 @@ public class Whiteboard extends JFrame {
 
 		btnAddRectangle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DRectModel model = new DRectModel(25,25,100,100,Color.gray);
+				DRectModel model = new DRectModel(25,25,100,100, penColor);
 				canvas.addShape(model);
 				canvas.repaint();
 			}
@@ -348,8 +348,13 @@ public class Whiteboard extends JFrame {
 
 		mntmSetPenColor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				freehandColor = JColorChooser.showDialog(Whiteboard.this, "Set Pen Color", Color.BLACK);
-				System.out.println(freehandColor);
+				penColor = JColorChooser.showDialog(Whiteboard.this, "Set Pen Color", Color.BLACK);
+//				System.out.println(penColor);
+				if(canvas.selected() ){
+//					Color color = JColorChooser.showDialog(Whiteboard.this, "Set Color", canvas.getSelected().getColor());
+//						System.out.println(color);
+					canvas.recolorShape(penColor);
+				}
 			}
 		});
 
@@ -490,21 +495,21 @@ public class Whiteboard extends JFrame {
 			}
 		});
 
-		mntmSetColor.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(canvas.selected() ){
-					Color color = JColorChooser.showDialog(Whiteboard.this, "Set Color", canvas.getSelected().getColor());
+//		mntmSetColor.addActionListener(new ActionListener() {
+//			public void actionPerformed(ActionEvent e) {
+//				if(canvas.selected() ){
+//					Color color = JColorChooser.showDialog(Whiteboard.this, "Set Color", canvas.getSelected().getColor());
 //						System.out.println(color);
-					canvas.recolorShape(color);
-				}
-			}
-		});
+//					canvas.recolorShape(color);
+//				}
+//			}
+//		});
 
 		mntmAddLine.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Point p1 = new Point(25,25);
 				Point p2 = new Point(75,75);
-				DLineModel model = new DLineModel(p1,p2);
+				DLineModel model = new DLineModel(p1,p2,penColor);
 				//model.setPoints(p1,p2);
 				canvas.addShape(model);
 				canvas.repaint();
@@ -513,7 +518,7 @@ public class Whiteboard extends JFrame {
 
 		mntmAddOval.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DOvalModel model = new DOvalModel(25,25,100,100,Color.gray);
+				DOvalModel model = new DOvalModel(25,25,100,100, penColor);
 				canvas.addShape(model);
 				canvas.repaint();
 			}
@@ -521,7 +526,7 @@ public class Whiteboard extends JFrame {
 
 		mntmAddRectangle.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				DRectModel model = new DRectModel(25,25,100,100,Color.gray);
+				DRectModel model = new DRectModel(25,25,100,100, penColor);
 				canvas.addShape(model);
 				canvas.repaint();
 			}

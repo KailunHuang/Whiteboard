@@ -39,11 +39,11 @@ public class joiner {
     private static Socket socket;
     private static JFrame frame;
     private static JTable table;
-    private static final String InetIP = "192.168.43.200"; //服务端IP
+    private static final String InetIP = "192.168.43.175"; //服务端IP
+    // 凯凯: 192.168.43.175 小陆: 192.168.43.200
     private static final String LocalInetIP = "192.168.43.112"; //自己的IP
     private static JButton btnWhiteboard;
     private static JMenuBar menuBar;
-
     private static Whiteboard whiteboard;
 
     private static int client = 1;

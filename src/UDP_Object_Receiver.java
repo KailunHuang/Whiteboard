@@ -7,8 +7,10 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
 
+import CreateWhiteBoard.Manager.DShapePackage;
+
+
 public class UDP_Object_Receiver {
-    static DShapeModel dShapeModel = null;
 
     public static void main(String[] args) throws ClassNotFoundException {
         try {
@@ -16,11 +18,12 @@ public class UDP_Object_Receiver {
             DatagramSocket da = new DatagramSocket(9099);
             byte[] bytes = new byte[1024 * 1024];
             DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length);
+
             da.receive(datagramPacket);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(datagramPacket.getData());
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            dShapeModel = (DShapeModel) objectInputStream.readObject();
-            System.out.println("接收完毕 "+dShapeModel);
+            DShapePackage dShapePackage = (DShapePackage) objectInputStream.readObject();
+            System.out.println("接收完毕 " + dShapePackage.dShapeModel);
             System.out.println("等待接收...");
             datagramPacket = new DatagramPacket(bytes, bytes.length);
             da.receive(datagramPacket);
@@ -30,9 +33,5 @@ public class UDP_Object_Receiver {
             e.printStackTrace();
         }
 
-    }
-    public static DShapeModel getdShapeModel() throws ClassNotFoundException {
-        main(null);
-        return dShapeModel;
     }
 }
