@@ -44,7 +44,6 @@ public class joiner {
     private static final String LocalInetIP = "192.168.43.112"; //自己的IP
     private static JButton btnWhiteboard;
     private static JMenuBar menuBar;
-
     private static Whiteboard whiteboard;
 
     private static int client = 1;

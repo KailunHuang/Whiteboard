@@ -15,10 +15,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.*;
-import java.rmi.NotBoundException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -87,9 +85,6 @@ public class Manager {
             //------接收message的线程👇------
             receiveMessageThread receiveMessageThread = new receiveMessageThread(8888 - 3000);
             threadPool.submit(receiveMessageThread);
-            //------接收白板更新的线程👇------
-            reveive_whiteboardInfo_Thread whiteboardInfo_thread = new reveive_whiteboardInfo_Thread(8888 - 4000);
-            threadPool.submit(whiteboardInfo_thread);
 
             while (true) {
                 Socket socket = serverSocket.accept(); //打开1个数据传输端口
@@ -389,7 +384,7 @@ public class Manager {
         }
     }
 
-    static class reveive_whiteboardInfo_Thread extends Thread {
+    public static class reveive_whiteboardInfo_Thread extends Thread {
         private int port;
 
         public reveive_whiteboardInfo_Thread(int port) {
@@ -406,7 +401,7 @@ public class Manager {
                     } else if (dShapePackage.index < 0) { //删除
                         whiteBoard_Info.remove(-1 * dShapePackage.index, dShapePackage.dShapeModel);
                     }else{//修改其中一个
-                        whiteBoard_Info.remove(dShapePackage.index, dShapePackage.dShapeModel);
+                        whiteBoard_Info.put(dShapePackage.index, dShapePackage.dShapeModel);
                     }
                     //让大家更新
                     print_whiteboard_info(whiteBoard_Info);
