@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/WhiteBoard.iml" filepath="$PROJECT_DIR$/WhiteBoard.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Whiteboard.iml" filepath="$PROJECT_DIR$/Whiteboard.iml" />
     </modules>
   </component>
 </project>

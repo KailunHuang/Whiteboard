@@ -301,6 +301,7 @@ public class Whiteboard extends JFrame {
 				Point p1 = new Point(25,25);
 				Point p2 = new Point(75,75);
 				DLineModel model = new DLineModel(p1,p2);
+
 				//model.setPoints(p1,p2);
 				canvas.addShape(model);
 				canvas.repaint();
@@ -573,9 +574,12 @@ public class Whiteboard extends JFrame {
 
 	}
 
+	public void updateModel(DShape shape, int index){
+		tableModel.updateModel(shape.getModel(), index);
+	}
+
 	public void toBack(DShape shape) {
 		tableModel.toBack(shape.getModel());
-
 	}
 
 	public void toFront(DShape shape) {

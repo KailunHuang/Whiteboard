@@ -1,7 +1,5 @@
 package whiteboard;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 
 public class DOval extends DShape {
 	
@@ -14,6 +12,7 @@ public class DOval extends DShape {
 		
 		Rectangle bounds = model.getBounds(); 
 		g.setColor(model.getColor());
+		((Graphics2D)g).setStroke(new BasicStroke(model.getStroke()));
 		g.fillOval(bounds.x, bounds.y, bounds.width, bounds.height);
 		g.setColor(Color.BLACK);
 		g.drawOval(bounds.x, bounds.y, bounds.width, bounds.height);
