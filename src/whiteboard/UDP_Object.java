@@ -35,6 +35,7 @@ public class UDP_Object {
                     System.out.println("收到了信息：" + str);
                     if (str.charAt(2) == '+') { // 这里是单纯的添加了新的图形
                         whiteboard_info = remoteAddress.get_whiteBoard_Info();
+
                     } else { //修改某一个图形
                         int motified_index = Integer.parseInt(str.substring(2));
 
