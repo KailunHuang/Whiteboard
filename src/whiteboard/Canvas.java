@@ -288,6 +288,7 @@ public class Canvas extends JPanel {
             shapes.add(shape);
             selected = shape;
             board.add(shape);
+
             if (board.getMode() == board.client) {
                 System.out.println("传输图形给Server");
                 DShapePackage dShapePackage = new DShapePackage(model, 0);
@@ -316,7 +317,7 @@ public class Canvas extends JPanel {
             else if (model instanceof DLineModel)
                 shape = new DLine(model);
             shapes.add(shape);
-            selected = shape;
+//            selected = shape;
             board.add(shape);
             repaint();
         }
