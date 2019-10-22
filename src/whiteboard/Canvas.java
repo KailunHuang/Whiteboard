@@ -288,12 +288,9 @@ public class Canvas extends JPanel {
             shapes.add(shape);
             selected = shape;
             board.add(shape);
-<<<<<<< HEAD
 
-=======
             whiteboard_info.add(shape.model);
             Manager.print_whiteboard_info(whiteboard_info);
->>>>>>> parent of e56aae5... fix error
             if (board.getMode() == board.client) {
                 System.out.println("传输图形给Server");
                 DShapePackage dShapePackage = new DShapePackage(model, 0);
@@ -307,7 +304,6 @@ public class Canvas extends JPanel {
         }
     }
 
-<<<<<<< HEAD
     public void addShapeWhileReceive(DShapeModel model) throws IOException {
 //			System.out.println(model);
         model.setStroke(board.Stroke);
@@ -330,8 +326,6 @@ public class Canvas extends JPanel {
 
     }
 
-=======
->>>>>>> parent of e56aae5... fix error
     public void removeShape() {
 
         if (selected()) {
