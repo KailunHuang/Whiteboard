@@ -168,29 +168,8 @@ public class Canvas extends JPanel {
 
                     if (selected != null) {
                         selected.moveBy(dx, dy);
-
                         board.updateTable(selected);
                         //move
-                        System.out.println("current shapes number:" + shapes.indexOf((selected)));
-                        int index = shapes.indexOf(selected);
-
-                        if (board.getMode() == board.client) {
-                            System.out.println("传输图形给Server");
-                            DShapePackage dShapePackage = new DShapePackage(selected.getModel(), index+1);
-                            try {
-                                UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                            System.out.println("已发送图形");
-                        } else {
-                            try {
-                                Manager.send_update_whiteboard(index+1);
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
-                        }
-
                         repaint();
 
                     }
@@ -199,7 +178,28 @@ public class Canvas extends JPanel {
                         movingKnob.x += dx;
                         movingKnob.y += dy;
                         selected.resize(pivotKnob, movingKnob);
+                    }
 
+
+                    //transfer the editing shape
+                    System.out.println("current shapes number:" + shapes.indexOf((selected)));
+                    int index = shapes.indexOf(selected);
+
+                    if (board.getMode() == board.client) {
+                        System.out.println("传输图形给Server");
+                        DShapePackage dShapePackage = new DShapePackage(selected.getModel(), index+1);
+                        try {
+                            UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                        System.out.println("已发送图形");
+                    } else {
+                        try {
+                            Manager.send_update_whiteboard(index+1);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
                     }
 
                 }
@@ -288,6 +288,7 @@ public class Canvas extends JPanel {
             shapes.add(shape);
             selected = shape;
             board.add(shape);
+
             whiteboard_info.add(shape.model);
             Manager.print_whiteboard_info(whiteboard_info);
             if (board.getMode() == board.client) {
@@ -303,6 +304,28 @@ public class Canvas extends JPanel {
         }
     }
 
+    public void addShapeWhileReceive(DShapeModel model) throws IOException {
+//			System.out.println(model);
+        model.setStroke(board.Stroke);
+        System.out.println(board.Stroke);
+        if (board.getMode() != 2) {
+            DShape shape = null;
+            if (model instanceof DOvalModel)
+                shape = new DOval(model);
+            else if (model instanceof DTextModel)
+                shape = new DText(model);
+            else if (model instanceof DRectModel)
+                shape = new DRect(model);
+            else if (model instanceof DLineModel)
+                shape = new DLine(model);
+            shapes.add(shape);
+            selected = shape;
+            board.add(shape);
+            repaint();
+        }
+
+    }
+
     public void removeShape() {
 
         if (selected()) {
@@ -312,7 +335,6 @@ public class Canvas extends JPanel {
             Manager.print_whiteboard_info(whiteboard_info);
             selected = null;
             //发送删除
-            
             repaint();
         }
     }
@@ -421,16 +443,15 @@ public class Canvas extends JPanel {
                     if (str.substring(0, 2).equals("/w")) { // 如果收到的是/u，则会update在线用户信息
                         whiteboard_info = remoteAddress.get_whiteBoard_Info();
                         Manager.print_whiteboard_info(whiteboard_info);
-                        canvas.board.tableModel.clear();
                         ArrayList<DShape> newShapes = new ArrayList<>();
+                        canvas.setNull();
                         for (int i = 0; i < whiteboard_info.size(); i++) {
-                            DShapeModel tmp = whiteboard_info.get(i);
-                            newShapes.add(buildShapeByModel(tmp));
-                            canvas.board.add(buildShapeByModel(tmp));
+//                            newShapes.add(buildShapeByModel(whiteboard_info.get(i)));
+//                            canvas.board.add(buildShapeByModel(whiteboard_info.get(i)));
+                            canvas.addShapeWhileReceive(whiteboard_info.get(i));
                         }
-                        canvas.shapes = new D
-                                newShapes;
-                        canvas.repaint();
+//                        canvas.shapes = newShapes;
+//                        canvas.repaint();
                     } else {
                         System.out.println("Wrong");
                     }
