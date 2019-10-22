@@ -487,7 +487,7 @@ public class Canvas extends JPanel {
         }
     }
 
-		public void sendAddShape(DShape shape) throws IOException {
+    public void sendAddShape(DShape shape) throws IOException {
 			if (board.getMode() == board.manager){ //manager
 
 			}else{ //other user
@@ -516,7 +516,6 @@ public class Canvas extends JPanel {
                         System.out.println("添加了图形");
                         canvas.addShape(dShapePackage.dShapeModel);
                     } else if (dShapePackage.index < 0) { //删除
-                        whiteboard_info.remove(-1 * dShapePackage.index);
                         canvas.removeShape(buildShapeByModel(dShapePackage.dShapeModel));
                     } else {//修改其中一个
                         int index = dShapePackage.index - 1;
@@ -537,6 +536,7 @@ public class Canvas extends JPanel {
 
         public static void send_update_whiteboard(int index) throws IOException {
             addresses = remoteAddress.getAddressed();
+            System.out.println("当前的在线用户为");
             Manager.printHashtable(addresses);
             if (addresses.size() == 0) {
                 return;
