@@ -65,6 +65,7 @@ public class UDPSend {
         datagramSocket.close();
     }
 
+
     public static void send_whiteboard_info(String ip, int port, DShapePackage item) throws IOException {
         DatagramSocket datagramSocket = new DatagramSocket();
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

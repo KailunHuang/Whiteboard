@@ -288,9 +288,6 @@ public class Canvas extends JPanel {
             shapes.add(shape);
             selected = shape;
             board.add(shape);
-
-            whiteboard_info.add(shape.model);
-            Manager.print_whiteboard_info(whiteboard_info);
             if (board.getMode() == board.client) {
                 System.out.println("传输图形给Server");
                 DShapePackage dShapePackage = new DShapePackage(model, 0);
@@ -513,6 +510,7 @@ public class Canvas extends JPanel {
                     System.out.println("收到了信息：" + dShapePackage.dShapeModel + ", " + dShapePackage.index);
                     if (dShapePackage.index == 0) { // 直接添加到whitboard_info
                         System.out.println("添加了图形");
+                        whiteboard_info.add(dShapePackage.dShapeModel);
                         canvas.addShape(dShapePackage.dShapeModel);
                     } else if (dShapePackage.index < 0) { //删除
                         whiteboard_info.remove(-1 * dShapePackage.index);
