@@ -343,7 +343,6 @@ public class Canvas extends JPanel {
     public void removeShape(DShape shape) {
         shapes.remove(shape);
         board.delete(shape);
-        whiteboard_info.remove(shape.model);
         Manager.print_whiteboard_info(whiteboard_info);
         repaint();
     }
