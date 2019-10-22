@@ -65,7 +65,7 @@ public class Whiteboard extends JFrame {
 	// Initial the variables
 	private Canvas canvas;
 	private DShape selectedShape;
-	private TableModel tableModel;
+	public TableModel tableModel;
 	private HashMap<String, Integer> fontMap;
 
 	private int mode;
@@ -604,6 +604,7 @@ public class Whiteboard extends JFrame {
 		if(selectedShape != null) {
 			if(freehand == false) {
 				int index = tableModel.getRow(selectedShape.getModel());
+				System.out.println("location of the shape: " + index);
 				table.setRowSelectionInterval(index, index);
 			}
 		}
