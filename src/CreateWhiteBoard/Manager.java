@@ -300,7 +300,7 @@ public class Manager {
             String str = entry.getKey();
             int port = Integer.parseInt(str.split(":")[1].trim());
             UDPSend.update(InetIP, port - 3000);
-            UDPSend.update(InetIP, port - 4000);
+//            UDPSend.update(InetIP, port - 4000);
         }
     }
 
