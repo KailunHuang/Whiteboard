@@ -173,6 +173,7 @@ public class Canvas extends JPanel {
                         //move
                         System.out.println("current shapes number:" + shapes.indexOf((selected)));
                         int index = shapes.indexOf(selected);
+
                         if (board.getMode() == board.client) {
                             System.out.println("传输图形给Server");
                             DShapePackage dShapePackage = new DShapePackage(selected.getModel(), index+1);
@@ -191,6 +192,7 @@ public class Canvas extends JPanel {
                         }
 
                         repaint();
+
                     }
 
                     if (movingKnob != null) {
