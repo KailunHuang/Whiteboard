@@ -16,6 +16,7 @@ import java.awt.event.KeyListener;
 import java.io.*;
 import java.net.*;
 import java.rmi.NotBoundException;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -44,7 +45,7 @@ public class Manager {
     private static JTextField textField;
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
-    public static final String InetIP = "10.12.44.50"; // 服务器的IP
+    public static final String InetIP = "192.168.0.85"; // 服务器的IP
     private static JMenuBar menuBar;
 
     private static int manager = 0;
@@ -335,25 +336,6 @@ public class Manager {
             int port = Integer.parseInt(str.split(":")[1].trim());
 
             UDPSend.sendMessage(ip, port - 3000, message);
-        }
-    }
-
-    public static void send_update_whiteboard(int index) throws IOException {
-
-        if (addresses.size() == 0) {
-            return;
-        }
-        for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry<String, Integer> entry = iterator.next();
-            String str = entry.getKey();
-            System.out.println("通知 " + str + " 更新");
-            if (str.equals("Manager : 8888")) {
-                continue;
-            }
-            String ip = str.split(":")[0].trim();
-            int port = Integer.parseInt(str.split(":")[1].trim());
-
-            UDPSend.update_whiteboard_table(ip, port - 4000, index);
         }
     }
 

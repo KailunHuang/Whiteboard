@@ -49,5 +49,19 @@ public class UDPReceive {
         return dShapeModel;
     }
 
+    public static DShapeModel receive_draw_info(int port) throws IOException, ClassNotFoundException {
+        System.out.println("等待接收 whiteboard_info...");
+        DatagramSocket da = new DatagramSocket(port);
+        byte[] bytes = new byte[1024 * 1024];
+        DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length);
+        da.receive(datagramPacket);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(datagramPacket.getData());
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        DShapeModel dShapeModel = (DShapeModel) objectInputStream.readObject();
+        System.out.println("接收完毕 " + dShapeModel);
+        da.close();
+        return dShapeModel;
+    }
+
 
 }

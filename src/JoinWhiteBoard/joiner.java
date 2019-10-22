@@ -42,9 +42,9 @@ public class joiner {
     private static JFrame frame;
     private static JTable table;
 //    private static String InetIP;
-    private static String InetIP = "10.12.181.197"; //服务端IP
+    private static String InetIP = "192.168.0.85"; //服务端IP
     // 凯凯: 192.168.43.175 小陆: 192.168.43.200
-    public static final String LocalInetIP = "10.12.181.197"; //自己的IP
+    public static final String LocalInetIP = "192.168.0.85"; //自己的IP
     public static int LocalPort = 0;
     private static JButton btnWhiteboard;
     private static JMenuBar menuBar;

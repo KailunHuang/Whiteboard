@@ -15,9 +15,11 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.rmi.NotBoundException;
+import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -29,7 +31,7 @@ import CreateWhiteBoard.Manager.DShapePackage;
 
 public class Canvas extends JPanel {
 
-    private Whiteboard board;
+    public static Whiteboard board;
     private DShape selected;
     private Point pivotKnob;
     private Point movingKnob;
@@ -48,6 +50,8 @@ public class Canvas extends JPanel {
     private static IjoinerAddresses remoteAddress;
     private static Registry registry;
     private static ArrayList<DShapeModel> whiteboard_info = new ArrayList<>();
+    public static Hashtable<String, Integer> addresses = new Hashtable<>();
+
 
     public Canvas(Whiteboard board) throws ClassNotFoundException, RemoteException, NotBoundException {
         this.board = board;
@@ -63,20 +67,27 @@ public class Canvas extends JPanel {
 
 
         System.out.println("服务器IP ：" + board.serverInetIP);
-        registry = LocateRegistry.getRegistry(board.serverInetIP, 1099);
-
+        registry = LocateRegistry.getRegistry(1099);
         remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
+
         System.out.println("身份标示符：" + board.getMode());
         if (board.getMode() == board.manager) {
-            //接受图形的线程
             System.out.println("现在是Manager");
-            receive_whiteboardInfo_Thread rw_thread = new receive_whiteboardInfo_Thread(4888, this);
+            addresses = remoteAddress.getAddressed();
+            System.out.println("当前的在线用户为");
+            Manager.printHashtable(addresses);
+            //接受图形的线程
+            receive_whiteboardInfo_Thread rw_thread = new receive_whiteboardInfo_Thread(8888 - 4000, this);
             rw_thread.start();
         } else {
+            System.out.println("现在是Client");
             System.out.println("当前Local Port:" + board.LocalPort);
-            updateThread update_Thread = new updateThread(board.LocalPort - 4000, this);
+            updateThread update_Thread = new updateThread(board.LocalPort - 4000, this, remoteAddress);
             update_Thread.start();
         }
+        //接收任意画的线程
+        receive_draw_Thread draw_thread = new receive_draw_Thread(board.LocalPort - 5000, this);
+        draw_thread.start();
     }
 
     public void canvasClicked() {
@@ -88,7 +99,6 @@ public class Canvas extends JPanel {
                     x_start = e.getX();
                     y_start = e.getY();
                 }
-
 
                 Point pt = e.getPoint();
                 x = e.getX();
@@ -112,7 +122,6 @@ public class Canvas extends JPanel {
                 }
 
                 repaint();
-
 
 
             }
@@ -179,7 +188,7 @@ public class Canvas extends JPanel {
 
                         if (board.getMode() == board.client) {
                             System.out.println("传输图形给Server");
-                            DShapePackage dShapePackage = new DShapePackage(selected.getModel(), index+1);
+                            DShapePackage dShapePackage = new DShapePackage(selected.getModel(), index + 1);
                             try {
                                 UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
                             } catch (IOException ex) {
@@ -188,7 +197,7 @@ public class Canvas extends JPanel {
                             System.out.println("已发送图形");
                         } else {
                             try {
-                                Manager.send_update_whiteboard(index+1);
+                                send_update_whiteboard(index + 1);
                             } catch (IOException ex) {
                                 ex.printStackTrace();
                             }
@@ -299,7 +308,7 @@ public class Canvas extends JPanel {
                 UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
                 System.out.println("已发送图形");
             } else {
-                Manager.send_update_whiteboard(0);
+                send_update_whiteboard(0);
             }
 
             repaint();
@@ -307,9 +316,6 @@ public class Canvas extends JPanel {
     }
 
     public void addShapeWhileReceive(DShapeModel model) throws IOException {
-//			System.out.println(model);
-        model.setStroke(board.Stroke);
-//        System.out.println(board.Stroke);
         if (board.getMode() != 2) {
             DShape shape = null;
             if (model instanceof DOvalModel)
@@ -428,55 +434,6 @@ public class Canvas extends JPanel {
         }
     }
 
-    static class updateThread extends Thread {
-        private int port;
-        private Canvas canvas;
-
-        public updateThread(int port, Canvas canvas) {
-            this.port = port;
-            this.canvas = canvas;
-        }
-
-        public synchronized void run() {
-            try {
-                while (true) {
-                    String str = UDPReceive.receive(port);  // 在此阻塞，等待一个UDP传输
-                    System.out.println("Receive message: " + str);
-                    if (str.substring(0, 2).equals("/w")) { // 如果收到的是/u，则会update在线用户信息
-                        whiteboard_info = remoteAddress.get_whiteBoard_Info();
-                        Manager.print_whiteboard_info(whiteboard_info);
-                        canvas.setNull();
-                        for (int i = 0; i < whiteboard_info.size(); i++) {
-                            canvas.addShapeWhileReceive(whiteboard_info.get(i));
-                        }
-
-                    } else {
-                        System.out.println("Wrong");
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        public DShape buildShapeByModel(DShapeModel model) {
-            DShape shape = null;
-            if (model instanceof DOvalModel)
-                shape = new DOval(model);
-            else if (model instanceof DTextModel)
-                shape = new DText(model);
-            else if (model instanceof DRectModel)
-                shape = new DRect(model);
-            else if (model instanceof DLineModel)
-                shape = new DLine(model);
-            return shape;
-        }
-    }
-
-    public static ArrayList<DShapeModel> post_whiteboard_info() {
-        return whiteboard_info;
-    }
-
     public void sendDeleteShape() {
         if (board.getMode() == board.manager) { //manager
 
@@ -486,16 +443,16 @@ public class Canvas extends JPanel {
     }
 
     public void sendAddShape(DShape shape) throws IOException {
-			if (board.getMode() == board.manager){ //manager
+        if (board.getMode() == board.manager) { //manager
 
-			}else{ //other user
+        } else { //other user
 //				UDPSend.send_whiteboard_info(joiner.InetIP, 4888, new Manager.DShapePackage(shape.model, 0));
-			}
-		}
+        }
+    }
 
-    //-----------THREAD CLASS---------------------//
+    //-----------👇是通讯用到的方法和类---------------------//
 
-
+    //服务端用来接收图形并放到ArrayList， 端口号-4000
     static class receive_whiteboardInfo_Thread extends Thread {
         private int port;
         private Canvas canvas;
@@ -532,7 +489,7 @@ public class Canvas extends JPanel {
 
         private static Hashtable<String, Integer> addresses = new Hashtable<>();
 
-        public static void send_update_whiteboard(int index) throws IOException {
+        private static void send_update_whiteboard(int index) throws IOException {
             addresses = remoteAddress.getAddressed();
             System.out.println("当前的在线用户为");
             Manager.printHashtable(addresses);
@@ -579,6 +536,121 @@ public class Canvas extends JPanel {
                 shape = new DLine(model);
             return shape;
         }
+    }
+
+    //服务端用来发送更新信号
+    public static void send_update_whiteboard(int index) throws IOException {
+
+        if (addresses.size() == 0) {
+            return;
+        }
+        for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, Integer> entry = iterator.next();
+            String str = entry.getKey();
+            if (str.equals("Manager : 8888")) {
+                continue;
+            }
+            System.out.println("通知 " + str + " 更新");
+            String ip = str.split(":")[0].trim();
+            int port = Integer.parseInt(str.split(":")[1].trim());
+
+            UDPSend.update_whiteboard_table(ip, port - 4000, index);
+        }
+    }
+
+    //接收任意画的信息并直接画，端口号-5000
+    static class receive_draw_Thread extends Thread {
+        private int port;
+        private Canvas canvas;
+
+        public receive_draw_Thread(int port, Canvas canvas) {
+            this.port = port;
+            this.canvas = canvas;
+        }
+
+        public synchronized void run() {
+            try {
+                while (true) {
+                    DShapeModel dShapeModel = UDPReceive.receive_draw_info(port);
+                    System.out.println("收到了draw的信息：" + dShapeModel);
+                    // 直接画
+                }
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    //发送任意画的信息
+    public static void send_draw_info(DShapeModel item) throws IOException {
+
+        if (addresses.size() == 0) {
+            return;
+        }
+        for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, Integer> entry = iterator.next();
+            String str = entry.getKey();
+            String ip = str.split(":")[0].trim();
+            if (str.equals("Manager : 8888")) {
+                ip = board.serverInetIP;
+            }
+            int port = Integer.parseInt(str.split(":")[1].trim());
+
+            UDPSend.send_draw_info(ip, port - 4000, item);
+        }
+    }
+
+    //客户端用来接收更新信号，端口号 -4000
+    static class updateThread extends Thread {
+        private int port;
+        private Canvas canvas;
+        private IjoinerAddresses remoteAddress;
+
+        public updateThread(int port, Canvas canvas, IjoinerAddresses remoteAddress) {
+            this.port = port;
+            this.canvas = canvas;
+            this.remoteAddress = remoteAddress;
+        }
+
+        public synchronized void run() {
+            try {
+                while (true) {
+                    String str = UDPReceive.receive(port);  // 在此阻塞，等待一个UDP传输
+                    System.out.println("Receive message: " + str);
+                    if (str.substring(0, 2).equals("/w")) { // 如果收到的是/u，则会update在线用户信息
+                        whiteboard_info = remoteAddress.get_whiteBoard_Info();
+                        Manager.print_whiteboard_info(whiteboard_info);
+                        canvas.setNull();
+                        for (int i = 0; i < whiteboard_info.size(); i++) {
+                            canvas.addShapeWhileReceive(whiteboard_info.get(i));
+                        }
+
+                    } else {
+                        System.out.println("Wrong");
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public DShape buildShapeByModel(DShapeModel model) {
+            DShape shape = null;
+            if (model instanceof DOvalModel)
+                shape = new DOval(model);
+            else if (model instanceof DTextModel)
+                shape = new DText(model);
+            else if (model instanceof DRectModel)
+                shape = new DRect(model);
+            else if (model instanceof DLineModel)
+                shape = new DLine(model);
+            return shape;
+        }
+    }
+
+    //RMI
+    public static ArrayList<DShapeModel> post_whiteboard_info() {
+        return whiteboard_info;
     }
 
 
