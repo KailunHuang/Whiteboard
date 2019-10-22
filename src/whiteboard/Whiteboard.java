@@ -533,7 +533,7 @@ public class Whiteboard extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				Point p1 = new Point(25,25);
 				Point p2 = new Point(75,75);
-				DLineModel model = new DLineModel(p1,p2,penColor);
+				DLineModel model = new DLineModel(p1,p2,penColor,Stroke);
 				//model.setPoints(p1,p2);
 				try {
 					canvas.addShape(model);

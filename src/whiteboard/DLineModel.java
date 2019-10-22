@@ -31,7 +31,16 @@ public class DLineModel extends DShapeModel implements Serializable{
     	this.bounds = new Rectangle(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
     	this.setColor(color);
     }
-     
+
+    public DLineModel(Point p1, Point p2, Color color, int Stroke){
+        super();
+        this.p1 = p1;
+        this.p2 = p2;
+        this.bounds = new Rectangle(p1.x, p1.y, p2.x - p1.x, p2.y - p1.y);
+        this.setColor(color);
+        this.setStroke(Stroke);
+    }
+
     public void moveBy(int dx, int dy) { 
     	
         p1.x += dx; 
