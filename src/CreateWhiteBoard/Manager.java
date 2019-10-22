@@ -44,14 +44,13 @@ public class Manager {
     private static JTextField textField;
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
-    public static final String InetIP = "10.12.181.197"; // 服务器的IP
+    public static final String InetIP = "10.12.44.50"; // 服务器的IP
     private static JMenuBar menuBar;
 
     private static int manager = 0;
 
 
     public static void main(String[] args) throws SocketException {
-
 //        InetIP = CreateWhiteBoard.InetIP.getV4IP();
         System.out.println("当前的IP是： " + InetIP);
         initialize();
