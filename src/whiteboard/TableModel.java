@@ -83,6 +83,10 @@ public class TableModel extends AbstractTableModel implements ModelListener{
         else return null;
 	}
 
+	public ArrayList<DShapeModel> getModels(){
+        return this.models;
+    }
+    
 	@Override
 	public void modelChanged(DShapeModel shapeModel) {
 		
@@ -90,5 +94,5 @@ public class TableModel extends AbstractTableModel implements ModelListener{
         fireTableRowsUpdated(index, index); 
 	}
 
-	
+
 }

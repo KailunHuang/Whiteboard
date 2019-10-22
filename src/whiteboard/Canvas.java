@@ -15,11 +15,9 @@ import java.awt.Rectangle;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.io.EOFException;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.rmi.NotBoundException;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -31,7 +29,7 @@ import CreateWhiteBoard.Manager.DShapePackage;
 
 public class Canvas extends JPanel {
 
-    public static Whiteboard board;
+    private Whiteboard board;
     private DShape selected;
     private Point pivotKnob;
     private Point movingKnob;
@@ -67,7 +65,8 @@ public class Canvas extends JPanel {
 
 
         System.out.println("服务器IP ：" + board.serverInetIP);
-        registry = LocateRegistry.getRegistry(1099);
+        registry = LocateRegistry.getRegistry(board.serverInetIP, 1099);
+
         remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
 
         System.out.println("身份标示符：" + board.getMode());
@@ -122,6 +121,7 @@ public class Canvas extends JPanel {
                 }
 
                 repaint();
+
 
 
             }
@@ -316,6 +316,9 @@ public class Canvas extends JPanel {
     }
 
     public void addShapeWhileReceive(DShapeModel model) throws IOException {
+//			System.out.println(model);
+        model.setStroke(board.Stroke);
+//        System.out.println(board.Stroke);
         if (board.getMode() != 2) {
             DShape shape = null;
             if (model instanceof DOvalModel)

@@ -19,13 +19,14 @@ public class DShapeModel implements Serializable{
 	public DShapeModel(int x, int y, int width, int height, Color color) {
 		this.bounds = new Rectangle(x, y, width, height);
 		this.color = color;
-
 	}
 	
 	public DShapeModel(int x, int y) { 
         this(x, y, 0, 0, Color.gray); 
     } 
-	
+
+
+
 	public DShapeModel() { 
 		bounds = new Rectangle(0, 0, 0, 0);
 		this.color = Color.gray; 
@@ -84,6 +85,7 @@ public class DShapeModel implements Serializable{
 		this.color = c;
 		
 	}
+
 	
 	public void setBounds(int x, int y, int width, int height) { 
         this.bounds = new Rectangle(x, y, width, height); 
