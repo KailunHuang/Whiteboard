@@ -80,6 +80,7 @@ public class Canvas extends JPanel {
     }
 
     public void canvasClicked() {
+
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
 
@@ -88,29 +89,31 @@ public class Canvas extends JPanel {
                     y_start = e.getY();
                 }
 
-                if (board.getMode() != 2) {
-                    Point pt = e.getPoint();
-                    x = e.getX();
-                    y = e.getY();
-                    movingKnob = null;
-                    pivotKnob = null;
 
-                    if (selected != null) {
-                        getSelection(pt);
+                Point pt = e.getPoint();
+                x = e.getX();
+                y = e.getY();
+                movingKnob = null;
+                pivotKnob = null;
+                System.out.println("鼠标被点击了");
+                if (selected != null) {
+                    System.out.println("select 不是null");
+                    getSelection(pt);
+                }
+
+
+                if (movingKnob == null) {
+                    selected = null;
+                    for (int i = 0; i < shapes.size(); i++) {
+                        if (shapes.get(i).containsPoint(pt))
+                            selected = shapes.get(i);
                     }
-
-                    if (movingKnob == null) {
-                        selected = null;
-                        for (int i = 0; i < shapes.size(); i++) {
-                            if (shapes.get(i).containsPoint(pt))
-                                selected = shapes.get(i);
-                        }
-
-                    }
-
-                    repaint();
 
                 }
+
+                repaint();
+
+
 
             }
 
@@ -165,7 +168,7 @@ public class Canvas extends JPanel {
                     int dy = e.getY() - y;
                     x = e.getX();
                     y = e.getY();
-
+                    System.out.println("selected shape: " + selected);
                     if (selected != null) {
                         selected.moveBy(dx, dy);
 
@@ -274,7 +277,6 @@ public class Canvas extends JPanel {
     public void addShape(DShapeModel model) throws IOException {
 //			System.out.println(model);
         model.setStroke(board.Stroke);
-        System.out.println(board.Stroke);
         if (board.getMode() != 2) {
             DShape shape = null;
             if (model instanceof DOvalModel)
@@ -307,7 +309,7 @@ public class Canvas extends JPanel {
     public void addShapeWhileReceive(DShapeModel model) throws IOException {
 //			System.out.println(model);
         model.setStroke(board.Stroke);
-        System.out.println(board.Stroke);
+//        System.out.println(board.Stroke);
         if (board.getMode() != 2) {
             DShape shape = null;
             if (model instanceof DOvalModel)
@@ -443,14 +445,11 @@ public class Canvas extends JPanel {
                     if (str.substring(0, 2).equals("/w")) { // 如果收到的是/u，则会update在线用户信息
                         whiteboard_info = remoteAddress.get_whiteBoard_Info();
                         Manager.print_whiteboard_info(whiteboard_info);
-                        ArrayList<DShape> newShapes = new ArrayList<>();
-                        canvas.board.tableModel.clear();
+                        canvas.setNull();
                         for (int i = 0; i < whiteboard_info.size(); i++) {
-                            newShapes.add(buildShapeByModel(whiteboard_info.get(i)));
-                            canvas.board.add(buildShapeByModel(whiteboard_info.get(i)));
+                            canvas.addShapeWhileReceive(whiteboard_info.get(i));
                         }
-                        canvas.shapes = newShapes;
-                        canvas.repaint();
+
                     } else {
                         System.out.println("Wrong");
                     }
