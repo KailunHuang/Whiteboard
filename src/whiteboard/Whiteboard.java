@@ -604,6 +604,7 @@ public class Whiteboard extends JFrame {
 		if(selectedShape != null) {
 			if(freehand == false) {
 				int index = tableModel.getRow(selectedShape.getModel());
+				System.out.println("location of the shape: " + index);
 				table.setRowSelectionInterval(index, index);
 			}
 		}
@@ -728,5 +729,6 @@ public class Whiteboard extends JFrame {
 	public int getMode(){
 		return mode;
 	}
+
 
 }
