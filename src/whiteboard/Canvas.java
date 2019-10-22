@@ -421,13 +421,15 @@ public class Canvas extends JPanel {
                     if (str.substring(0, 2).equals("/w")) { // 如果收到的是/u，则会update在线用户信息
                         whiteboard_info = remoteAddress.get_whiteBoard_Info();
                         Manager.print_whiteboard_info(whiteboard_info);
-                        ArrayList<DShape> newShapes = new ArrayList<>();
                         canvas.board.tableModel.clear();
+                        ArrayList<DShape> newShapes = new ArrayList<>();
                         for (int i = 0; i < whiteboard_info.size(); i++) {
-                            newShapes.add(buildShapeByModel(whiteboard_info.get(i)));
-                            canvas.board.add(buildShapeByModel(whiteboard_info.get(i)));
+                            DShapeModel tmp = whiteboard_info.get(i);
+                            newShapes.add(buildShapeByModel(tmp));
+                            canvas.board.add(buildShapeByModel(tmp));
                         }
-                        canvas.shapes = newShapes;
+                        canvas.shapes = new D
+                                newShapes;
                         canvas.repaint();
                     } else {
                         System.out.println("Wrong");

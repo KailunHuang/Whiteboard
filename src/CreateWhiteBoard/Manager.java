@@ -44,7 +44,7 @@ public class Manager {
     private static JTextField textField;
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
-    public static final String InetIP = "192.168.43.200"; // 服务器的IP
+    public static final String InetIP = "10.12.181.197"; // 服务器的IP
     private static JMenuBar menuBar;
 
     private static int manager = 0;
@@ -300,6 +300,7 @@ public class Manager {
             String str = entry.getKey();
             int port = Integer.parseInt(str.split(":")[1].trim());
             UDPSend.update(InetIP, port - 3000);
+            UDPSend.update(InetIP, port - 4000);
         }
     }
 
