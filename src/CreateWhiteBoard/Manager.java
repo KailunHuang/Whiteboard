@@ -186,8 +186,12 @@ public class Manager {
         ActionListener clean = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                textArea.setText(" ");
-                sendArea.setText(" ");
+                try {
+                    kick_all();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                System.exit(0);
             }
         };
 
@@ -216,7 +220,7 @@ public class Manager {
         JButton btnWhiteboard = new JButton("Whiteboard");
         menuBar.add(btnWhiteboard);
 
-        btnClean = new JButton("Clean");
+        btnClean = new JButton("Quit");
         menuBar.add(btnClean);
         btnClean.addActionListener(clean);
         btnWhiteboard.addActionListener(newWhiteboard);
@@ -359,6 +363,23 @@ public class Manager {
             int port = Integer.parseInt(str.split(":")[1].trim());
 
             UDPSend.sendMessage(ip, port - 1500, ">>");
+        }
+    }
+
+    public static void kick_all() throws IOException {
+        if (addresses.size() == 0) {
+            return;
+        }
+        for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, Integer> entry = iterator.next();
+            String str = entry.getKey();
+            String ip = str.split(":")[0].trim();
+            if (str.equals("Manager : 8888")) {
+                continue;
+            }
+            int port = Integer.parseInt(str.split(":")[1].trim());
+
+            UDPSend.kick(ip, port - 3000);
         }
     }
 
