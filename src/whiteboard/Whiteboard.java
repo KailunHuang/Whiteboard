@@ -310,6 +310,8 @@ public class Whiteboard extends JFrame {
 
         btnAddLine.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                eraser = false;
+                freehand = false;
                 Point p1 = new Point(25, 25);
                 Point p2 = new Point(75, 75);
                 DLineModel model = new DLineModel(p1, p2, penColor);
@@ -326,6 +328,7 @@ public class Whiteboard extends JFrame {
 
         btnAddOval.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 DOvalModel model = new DOvalModel(25, 25, 100, 100, penColor);
                 try {
                     canvas.addShape(model);
@@ -333,11 +336,15 @@ public class Whiteboard extends JFrame {
                     ex.printStackTrace();
                 }
                 canvas.repaint();
+                eraser = false;
+                freehand = false;
             }
         });
 
         btnfunction.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                eraser = false;
+                freehand = false;
                 freehand = false;
                 eraser = false;
             }
@@ -345,6 +352,8 @@ public class Whiteboard extends JFrame {
 
         btnAddRectangle.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                eraser = false;
+                freehand = false;
                 DRectModel model = new DRectModel(25, 25, 100, 100, penColor);
                 try {
                     canvas.addShape(model);
@@ -357,6 +366,8 @@ public class Whiteboard extends JFrame {
 
         btnAddText.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                eraser = false;
+                freehand = false;
                 String s = textField.getText();
                 DTextModel model = new DTextModel();
                 model.setBounds(20, 20, 415, 80);
@@ -378,6 +389,7 @@ public class Whiteboard extends JFrame {
         buttonEraser.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 eraser = true;
+                freehand = false;
             }
         });
 
@@ -399,6 +411,8 @@ public class Whiteboard extends JFrame {
 
         WidthChooser.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                eraser = false;
+                freehand = false;
                 int s = (int) WidthChooser.getSelectedIndex();
                 Stroke = s + 1;
                 System.out.println(Stroke);
@@ -409,6 +423,8 @@ public class Whiteboard extends JFrame {
         btnClose.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 board.setVisible(false);
+                eraser = false;
+                freehand = false;
             }
         });
 

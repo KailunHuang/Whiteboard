@@ -190,7 +190,7 @@ public class Canvas extends JPanel {
                     //System.out.println(board.freehandColor);
                     // Set Pen Color
                     model.setColor(Color.WHITE);
-                    model.setStroke(board.Stroke);
+                    model.setStroke(3);
 
                     try {
                         System.out.println("发送的笔触是：" + board.Stroke);
