@@ -1,15 +1,11 @@
 package JoinWhiteBoard;
-
-import CreateWhiteBoard.Manager;
-import whiteboard.DShape;
+import whiteboard.DLineModel;
 import whiteboard.DShapeModel;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.SocketException;
 
 import CreateWhiteBoard.Manager.DShapePackage;
 
@@ -57,10 +53,10 @@ public class UDPReceive {
         da.receive(datagramPacket);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(datagramPacket.getData());
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-        DShapeModel dShapeModel = (DShapeModel) objectInputStream.readObject();
-        System.out.println("接收完毕 " + dShapeModel);
+        DLineModel dLineModel = (DLineModel) objectInputStream.readObject();
+        System.out.println("接收完毕 " + dLineModel);
         da.close();
-        return dShapeModel;
+        return dLineModel;
     }
 
 
