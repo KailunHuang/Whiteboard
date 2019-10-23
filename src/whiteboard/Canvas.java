@@ -177,16 +177,12 @@ public class Canvas extends JPanel {
                         System.out.println("current shapes number:" + shapes.indexOf((selected)));
                         int index = shapes.indexOf(selected);
 
-
                         try {
                             Manager.send_update_whiteboard(index+1);
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
-
-
                         repaint();
-
                     }
 
                     if (movingKnob != null) {
