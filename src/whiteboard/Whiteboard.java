@@ -377,7 +377,11 @@ public class Whiteboard extends JFrame {
 				if(canvas.selected() ){
 //					Color color = JColorChooser.showDialog(Whiteboard.this, "Set Color", canvas.getSelected().getColor());
 //						System.out.println(color);
-					canvas.recolorShape(penColor);
+					try {
+						canvas.recolorShape(penColor);
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
 				}
 			}
 		});

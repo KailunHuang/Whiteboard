@@ -298,12 +298,18 @@ public class Canvas extends JPanel {
         }
     }
 
-    public void recolorShape(Color color) {
+    public void recolorShape(Color color) throws IOException {
         if (selected != null) {
             selected.setColor(color);
+            DShapeModel model = selected.getModel();
+            int index = shapes.indexOf(selected);
+            if (board.getMode() == board.client && !board.freehand && !board.eraser == true) {
+                DShapePackage dShapePackage = new DShapePackage(model, index);
+                UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
+            } else if (board.getMode() == board.manager && !board.freehand && !board.eraser == true) {
+                send_update_whiteboard(index);
+            }
             //change color
-
-
             repaint();
         }
     }
@@ -339,7 +345,6 @@ public class Canvas extends JPanel {
 //            Manager.print_whiteboard_info(whiteboard_info);
 
             if (board.getMode() == board.client && !board.freehand && !board.eraser == true) {
-
 //                System.out.println("传输图形给Server");
                 DShapePackage dShapePackage = new DShapePackage(model, 0);
                 UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
