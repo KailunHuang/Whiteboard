@@ -40,7 +40,7 @@ public class Manager {
     private static JTextField textField;
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
-    public static final String InetIP = "10.12.175.51"; // 服务器的IP
+    public static final String InetIP = "192.168.43.200"; // 服务器的IP
     private static JMenuBar menuBar;
 
     public static Whiteboard whiteboard = null;
