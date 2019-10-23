@@ -472,6 +472,7 @@ public class Canvas extends JPanel {
 //                    System.out.println("收到了信息：" + dShapePackage.dShapeModel + ", " + dShapePackage.index);
                     if (dShapePackage.index == 0) { // 直接添加到whitboard_info
 //                        System.out.println("添加了图形");
+                        whiteboard_info.add(dShapePackage.dShapeModel);
                         canvas.addShapeWhileReceive(dShapePackage.dShapeModel);
                     } else if (dShapePackage.index < 0) { //删除
                         canvas.removeShape(buildShapeByModel(dShapePackage.dShapeModel));
