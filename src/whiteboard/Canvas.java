@@ -249,6 +249,8 @@ public class Canvas extends JPanel {
 
             }
         });
+
+
         addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
                 if (board.freehand == true) {
@@ -257,7 +259,7 @@ public class Canvas extends JPanel {
 //                    System.out.println("Relased the mouse!");
 //                    System.out.println("Freehand model: " + board.freehand);
                 } else if (board.eraser == true) {
-                    board.eraser = false;
+//                    board.eraser = false;
                     selected = null;
 //                    System.out.println("Relased the mouse!");
 //                    System.out.println("Freehand model: " + board.freehand);

@@ -47,7 +47,7 @@ public class UDPSend {
 
     public static void over(String ip, int port) throws IOException {
         DatagramSocket datagramSocket = new DatagramSocket();
-        String str = "/k";
+        String str = "/o";
         byte[] datagram = str.getBytes();
         DatagramPacket datagramPacket = new DatagramPacket(datagram, datagram.length);
         datagramPacket.setSocketAddress(new InetSocketAddress(ip, port));
