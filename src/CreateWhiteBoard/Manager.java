@@ -112,6 +112,8 @@ public class Manager {
                     continue;
                 }
 
+                send_update_address();
+
                 //-----更新在线用户的地址👇-----
                 addresses.put(ip + ":" + socket.getPort(), 1);
                 socketList.put(ip + ":" + socket.getPort(), socket); //获取新加入用户的socket
@@ -340,6 +342,23 @@ public class Manager {
             int port = Integer.parseInt(str.split(":")[1].trim());
 
             UDPSend.sendMessage(ip, port - 3000, message);
+        }
+    }
+
+    private static void send_update_address() throws IOException {
+        if (addresses.size() == 0) {
+            return;
+        }
+        for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, Integer> entry = iterator.next();
+            String str = entry.getKey();
+            String ip = str.split(":")[0].trim();
+            if (str.equals("Manager : 8888")) {
+                ip = InetIP;
+            }
+            int port = Integer.parseInt(str.split(":")[1].trim());
+
+            UDPSend.sendMessage(ip, port - 1500, ">>");
         }
     }
 
