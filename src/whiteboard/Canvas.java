@@ -50,7 +50,7 @@ public class Canvas extends JPanel {
     public static Hashtable<String, Integer> addresses = new Hashtable<>();
 
 
-    public Canvas(Whiteboard board) throws ClassNotFoundException, RemoteException, NotBoundException {
+    public Canvas(Whiteboard board) throws ClassNotFoundException, IOException, NotBoundException {
         this.board = board;
         this.setBackground(Color.WHITE);
         canvasClicked();
@@ -66,6 +66,12 @@ public class Canvas extends JPanel {
         System.out.println("服务器IP ：" + board.serverInetIP);
         registry = LocateRegistry.getRegistry(board.serverInetIP, 1099);
         remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
+        whiteboard_info = remoteAddress.get_whiteBoard_Info();
+
+        for (int i = 0; i < whiteboard_info.size(); i++) {
+            addShapeWhileReceive(whiteboard_info.get(i));
+        }
+
         addresses = remoteAddress.getAddressed();
         System.out.println("身份标示符：" + board.getMode());
         if (board.getMode() == board.manager) {
@@ -162,6 +168,7 @@ public class Canvas extends JPanel {
                     // Set Pen Color
                     model.setColor(Color.WHITE);
                     model.setStroke(board.Stroke);
+
                     try {
                         System.out.println("发送的笔触是：" + board.Stroke);
                         send_draw_info(model);
@@ -234,7 +241,7 @@ public class Canvas extends JPanel {
 //                    System.out.println("传输图形给Server");
                     DShapePackage dShapePackage = new DShapePackage(selected.getModel(), index + 1);
                     try {
-                        if(board.getMode() == board.client) {
+                        if (board.getMode() == board.client) {
                             UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
                         }
                     } catch (IOException ex) {
@@ -311,13 +318,13 @@ public class Canvas extends JPanel {
 
             whiteboard_info.add(shape.model);
 //            Manager.print_whiteboard_info(whiteboard_info);
-            if (board.getMode() == board.client && !board.freehand) {
+            if (board.getMode() == board.client && !board.freehand && !board.eraser == true) {
 //                System.out.println("传输图形给Server");
                 DShapePackage dShapePackage = new DShapePackage(model, 0);
                 UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
 //                System.out.println("已发送图形");
-            } else if (board.getMode() == board.manager && !board.freehand){
-                    send_update_whiteboard(0);
+            } else if (board.getMode() == board.manager && !board.freehand && !board.eraser == true) {
+                send_update_whiteboard(0);
             }
 
             repaint();
@@ -645,12 +652,12 @@ public class Canvas extends JPanel {
                 ip = board.serverInetIP;
             }
             int port = Integer.parseInt(str.split(":")[1].trim());
-            if(port == board.LocalPort){
+            if (port == board.LocalPort) {
                 continue;
             }
             System.out.println("" +
                     "" +
-                    "：" +(port - 5000));
+                    "：" + (port - 5000));
             UDPSend.send_draw_info(ip, port - 5000, item);
         }
     }
