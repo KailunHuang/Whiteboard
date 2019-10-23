@@ -69,7 +69,8 @@ public class Canvas extends JPanel {
         whiteboard_info = remoteAddress.get_whiteBoard_Info();
 
         for (int i = 0; i < whiteboard_info.size(); i++) {
-            addShapeWhileReceive(whiteboard_info.get(i));
+            shapes.add(buildShapeByModel(whiteboard_info.get(i)));
+            repaint();
         }
 
         addresses = remoteAddress.getAddressed();
@@ -125,6 +126,19 @@ public class Canvas extends JPanel {
             }
         });
 
+    }
+
+    public DShape buildShapeByModel(DShapeModel model) {
+        DShape shape = null;
+        if (model instanceof DOvalModel)
+            shape = new DOval(model);
+        else if (model instanceof DTextModel)
+            shape = new DText(model);
+        else if (model instanceof DRectModel)
+            shape = new DRect(model);
+        else if (model instanceof DLineModel)
+            shape = new DLine(model);
+        return shape;
     }
 
     public void drag() {
