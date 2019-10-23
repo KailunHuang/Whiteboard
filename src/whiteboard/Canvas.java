@@ -64,7 +64,7 @@ public class Canvas extends JPanel {
 
 
         System.out.println("服务器IP ：" + board.serverInetIP);
-        registry = LocateRegistry.getRegistry(board.serverInetIP,1099);
+        registry = LocateRegistry.getRegistry(board.serverInetIP, 1099);
         remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
 
         System.out.println("身份标示符：" + board.getMode());
@@ -139,6 +139,7 @@ public class Canvas extends JPanel {
                     model.setColor(board.penColor);
                     model.setStroke(board.Stroke);
                     try {
+                        System.out.println("发送的笔触是：" + board.Stroke);
                         send_draw_info(model);
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -603,7 +604,7 @@ public class Canvas extends JPanel {
                 while (true) {
 //                    System.out.println("接收线的端口是："+port);
                     DShapeModel dShapeModel = UDPReceive.receive_draw_info(da);
-                    System.out.println("收到了draw的信息：" + dShapeModel);
+                    System.out.println("收到了draw的信息：" + dShapeModel.getStroke());
                     // 直接画
                     DShape shape = new DLine(dShapeModel);
 //                    canvas.addShapeWhileReceive(dShapeModel);
