@@ -173,6 +173,8 @@ public class joiner {
                     ex.printStackTrace();
                 } catch (NotBoundException ex) {
                     ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
         };
