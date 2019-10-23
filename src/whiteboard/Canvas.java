@@ -252,7 +252,7 @@ public class Canvas extends JPanel {
         addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
                 if (board.freehand == true) {
-                    board.freehand = false;
+//                    board.freehand = false;
                     selected = null;
 //                    System.out.println("Relased the mouse!");
 //                    System.out.println("Freehand model: " + board.freehand);

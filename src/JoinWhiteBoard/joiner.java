@@ -309,8 +309,8 @@ public class joiner {
                     }else if (str.substring(0, 2).equals("/o")) { // 如果收到的是/o，则表示Manager关闭了画板服务
                         socket.close(); // 连接的socket关闭
                         JOptionPane.showMessageDialog(null, " The server has been closed! ", " Error", JOptionPane.ERROR_MESSAGE);//提示用户manager已经退出程序
-                        System.exit(0); // 退出程序
                         System.out.println("Has been closed!");
+                        System.exit(0); // 退出程序
                     }
                 }
             } catch (IOException e) {
