@@ -606,10 +606,11 @@ public class Canvas extends JPanel {
                     System.out.println("收到了draw的信息：" + dShapeModel);
                     // 直接画
                     DShape shape = new DLine(dShapeModel);
-                    canvas.shapes.add(shape);
-                    canvas.selected = shape;
-                    canvas.board.add(shape);
-                    repaint();
+                    canvas.addShapeWhileReceive(dShapeModel);
+//                    canvas.shapes.add(shape);
+//                    canvas.selected = shape;
+//                    canvas.board.add(shape);
+//                    repaint();
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
