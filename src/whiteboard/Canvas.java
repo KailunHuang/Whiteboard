@@ -33,7 +33,8 @@ public class Canvas extends JPanel {
     private static Point pivotKnob;
     private static Point movingKnob;
 
-    private static ArrayList<DShape> shapes;
+    private static ArrayList<DShape> shapes = new ArrayList<DShape>();
+    ;
     private Hashtable<Integer, DShape> shapeTable;
     private static ArrayList<Point> knobs;
 
@@ -57,15 +58,24 @@ public class Canvas extends JPanel {
         drag();
         setPreferredSize(new Dimension(400, 400));
         setBackground(Color.WHITE);
-        shapes = new ArrayList<DShape>();
         selected = null;
         movingKnob = null;
         setVisible(true);
+
 
         System.out.println("服务器IP ：" + board.serverInetIP);
         registry = LocateRegistry.getRegistry(board.serverInetIP, 1099);
         remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
         whiteboard_info = remoteAddress.get_whiteBoard_Info();
+
+        if (shapes.size() == 0) {
+            for (int i = 0; i < whiteboard_info.size(); i++) {
+                shapes.add(buildShapeByModel(whiteboard_info.get(i)));
+
+            }
+            repaint();
+        }
+
 
 
         addresses = remoteAddress.getAddressed();
@@ -292,6 +302,8 @@ public class Canvas extends JPanel {
         if (selected != null) {
             selected.setColor(color);
             //change color
+
+
             repaint();
         }
     }
@@ -341,7 +353,7 @@ public class Canvas extends JPanel {
     }
 
     public void addShapeWhileReceive(DShapeModel model) throws IOException {
-        if (model == null){
+        if (model == null) {
             return;
         }
         if (board.getMode() != 2) {
