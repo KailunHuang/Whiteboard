@@ -40,6 +40,8 @@ public class Canvas extends JPanel {
 
     private int x = 0;
     private int y = 0;
+    public static int x_click = 0;
+    public static int y_click = 0;
 
     private Point p_start, p_drag;
     private int x_start, y_start;
@@ -71,11 +73,9 @@ public class Canvas extends JPanel {
         if (shapes.size() == 0) {
             for (int i = 0; i < whiteboard_info.size(); i++) {
                 shapes.add(buildShapeByModel(whiteboard_info.get(i)));
-
             }
             repaint();
         }
-
 
 
         addresses = remoteAddress.getAddressed();
@@ -104,6 +104,8 @@ public class Canvas extends JPanel {
 
         addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent e) {
+                x_click = e.getX();
+                y_click = e.getY();
 
                 if (board.freehand == true || board.eraser == true) {
                     x_start = e.getX();
@@ -206,7 +208,7 @@ public class Canvas extends JPanel {
                     x_start = x_drag;
                     y_start = y_drag;
 
-                } else if (board.getMode() != 2) {
+                } else {
                     int dx = e.getX() - x;
                     int dy = e.getY() - y;
                     x = e.getX();
@@ -215,17 +217,23 @@ public class Canvas extends JPanel {
                     if (selected != null) {
                         selected.moveBy(dx, dy);
 
+
+
                         board.updateTable(selected);
                         //move
 //                        System.out.println("current shapes number:" + shapes.indexOf((selected)));
                         int index = shapes.indexOf(selected);
-
                         try {
-                            send_update_whiteboard(index + 1);
+                            if (board.getMode() == board.manager) {
+                                send_update_whiteboard(index + 1);
+                            }
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
+
+
                         repaint();
+
                     }
 
                     if (movingKnob != null) {
@@ -254,16 +262,24 @@ public class Canvas extends JPanel {
 //                    System.out.println("Relased the mouse!");
 //                    System.out.println("Freehand model: " + board.freehand);
                 } else {
-                    int index = shapes.indexOf(selected);
+
 //                    System.out.println("传输图形给Server");
+                    int dx = e.getX() - x_click;
+                    int dy = e.getY() - y_click;
+
+                    int index = shapes.indexOf(selected);
                     DShapePackage dShapePackage = new DShapePackage(selected.getModel(), index + 1);
-                    try {
-                        if (board.getMode() == board.client) {
-                            UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
+                    if (board.getMode() == board.client ) {
+                        try {
+                            if (dx!=0 || dy!=0) {
+                                UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
+                            }
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
                         }
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
                     }
+
+
 //                    System.out.println("已发送图形");
                 }
             }
@@ -303,11 +319,12 @@ public class Canvas extends JPanel {
             selected.setColor(color);
             DShapeModel model = selected.getModel();
             int index = shapes.indexOf(selected);
+            System.out.println("Number of index " +index);
             if (board.getMode() == board.client && !board.freehand && !board.eraser == true) {
-                DShapePackage dShapePackage = new DShapePackage(model, index);
+                DShapePackage dShapePackage = new DShapePackage(model, index+1);
                 UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
             } else if (board.getMode() == board.manager && !board.freehand && !board.eraser == true) {
-                send_update_whiteboard(index);
+                send_update_whiteboard(index+1);
             }
             //change color
             repaint();
@@ -343,7 +360,6 @@ public class Canvas extends JPanel {
 
             whiteboard_info.add(shape.model);
 //            Manager.print_whiteboard_info(whiteboard_info);
-
             if (board.getMode() == board.client && !board.freehand && !board.eraser == true) {
 //                System.out.println("传输图形给Server");
                 DShapePackage dShapePackage = new DShapePackage(model, 0);
@@ -487,7 +503,13 @@ public class Canvas extends JPanel {
         }
     }
 
+    public void sendAddShape(DShape shape) throws IOException {
+        if (board.getMode() == board.manager) { //manager
 
+        } else { //other user
+//				UDPSend.send_whiteboard_info(joiner.InetIP, 4888, new Manager.DShapePackage(shape.model, 0));
+        }
+    }
 
     //-----------👇是通讯用到的方法和类---------------------//
 
@@ -543,7 +565,6 @@ public class Canvas extends JPanel {
                     //让大家更新
 //                    Manager.print_whiteboard_info(whiteboard_info);
                     send_update_whiteboard(dShapePackage.index);
-
                 }
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -668,15 +689,12 @@ public class Canvas extends JPanel {
                     DShapeModel dShapeModel = UDPReceive.receive_draw_info(da);
                     System.out.println("收到了draw的信息：" + dShapeModel.getStroke());
                     // 直接画
-
                     DShape shape = new DLine(dShapeModel);
 //                    canvas.addShapeWhileReceive(dShapeModel);
                     whiteboard_info.add(dShapeModel);
-
                     shapes.add(shape);
                     selected = shape;
                     board.add(shape);
-
                     repaint();
                 }
             } catch (IOException | ClassNotFoundException e) {
