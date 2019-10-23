@@ -40,8 +40,10 @@ public class Manager {
     private static JTextField textField;
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
-    public static final String InetIP = "192.168.43.200"; // 服务器的IP
+    public static final String InetIP = "10.12.175.51"; // 服务器的IP
     private static JMenuBar menuBar;
+
+    public static Whiteboard whiteboard = null;
 
     private static int manager = 0;
 
@@ -191,7 +193,11 @@ public class Manager {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Whiteboard whiteboard = new Whiteboard(manager, 8888, InetIP);
+                    if (whiteboard == null) {
+                        whiteboard = new Whiteboard(manager, 8888, InetIP);
+                    }else {
+                        whiteboard.board.setVisible(true);
+                    }
                 } catch (ClassNotFoundException ex) {
                     ex.printStackTrace();
                 } catch (RemoteException ex) {

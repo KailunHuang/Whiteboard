@@ -62,16 +62,11 @@ public class Canvas extends JPanel {
         movingKnob = null;
         setVisible(true);
 
-
         System.out.println("服务器IP ：" + board.serverInetIP);
         registry = LocateRegistry.getRegistry(board.serverInetIP, 1099);
         remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
         whiteboard_info = remoteAddress.get_whiteBoard_Info();
 
-        for (int i = 0; i < whiteboard_info.size(); i++) {
-            shapes.add(buildShapeByModel(whiteboard_info.get(i)));
-            repaint();
-        }
 
         addresses = remoteAddress.getAddressed();
         System.out.println("身份标示符：" + board.getMode());

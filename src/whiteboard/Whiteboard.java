@@ -56,7 +56,7 @@ public class Whiteboard extends JFrame {
 
 
 	// Initial the Components
-	private JFrame board;
+	public static JFrame board;
 	private JTable table;
 	private JTextField textField;
 	private JScrollPane scrollpane;
@@ -392,7 +392,7 @@ public class Whiteboard extends JFrame {
 
 		btnClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				board.dispose();
+				board.setVisible(false);
 			}
 		});
 
