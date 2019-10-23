@@ -380,7 +380,7 @@ public class Manager {
             }
             int port = Integer.parseInt(str.split(":")[1].trim());
 
-            UDPSend.kick(ip, port - 3000);
+            UDPSend.over(ip, port - 3000);
         }
     }
 

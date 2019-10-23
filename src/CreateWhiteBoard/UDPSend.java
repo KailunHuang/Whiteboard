@@ -45,6 +45,17 @@ public class UDPSend {
         datagramSocket.close();
     }
 
+    public static void over(String ip, int port) throws IOException {
+        DatagramSocket datagramSocket = new DatagramSocket();
+        String str = "/k";
+        byte[] datagram = str.getBytes();
+        DatagramPacket datagramPacket = new DatagramPacket(datagram, datagram.length);
+        datagramPacket.setSocketAddress(new InetSocketAddress(ip, port));
+        datagramSocket.send(datagramPacket);
+        datagramSocket.close();
+    }
+
+
     public static void sendMessage(String ip, int port, String message) throws IOException { // 发送message UDP
         DatagramSocket datagramSocket = new DatagramSocket(); // 新建一个数据包的socket对象
         message = "/m" + message;
