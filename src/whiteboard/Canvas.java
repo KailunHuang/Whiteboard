@@ -700,9 +700,7 @@ public class Canvas extends JPanel {
             if (port == board.LocalPort) {
                 continue;
             }
-            System.out.println("" +
-                    "" +
-                    "：" + (port - 5000));
+
             UDPSend.send_draw_info(ip, port - 5000, item);
         }
     }
