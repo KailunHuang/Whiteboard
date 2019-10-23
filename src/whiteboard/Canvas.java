@@ -607,6 +607,7 @@ public class Canvas extends JPanel {
                     // 直接画
                     DShape shape = new DLine(dShapeModel);
 //                    canvas.addShapeWhileReceive(dShapeModel);
+                    whiteboard_info.add(dShapeModel);
                     canvas.shapes.add(shape);
                     canvas.selected = shape;
                     canvas.board.add(shape);
