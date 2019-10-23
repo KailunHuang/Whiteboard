@@ -41,9 +41,10 @@ public class Manager {
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
 
-    public static final String InetIP = "192.168.43.33"; // 服务器的IP
-
+    public static final String InetIP = "192.168.43.200"; // 服务器的IP
     private static JMenuBar menuBar;
+
+    public static Whiteboard whiteboard = null;
 
     private static int manager = 0;
 
@@ -111,6 +112,8 @@ public class Manager {
                     bufferedWriter.flush();
                     continue;
                 }
+
+                send_update_address();
 
                 //-----更新在线用户的地址👇-----
                 addresses.put(ip + ":" + socket.getPort(), 1);
@@ -193,7 +196,11 @@ public class Manager {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Whiteboard whiteboard = new Whiteboard(manager, 8888, InetIP);
+                    if (whiteboard == null) {
+                        whiteboard = new Whiteboard(manager, 8888, InetIP);
+                    }else {
+                        whiteboard.board.setVisible(true);
+                    }
                 } catch (ClassNotFoundException ex) {
                     ex.printStackTrace();
                 } catch (RemoteException ex) {
@@ -336,6 +343,23 @@ public class Manager {
             int port = Integer.parseInt(str.split(":")[1].trim());
 
             UDPSend.sendMessage(ip, port - 3000, message);
+        }
+    }
+
+    private static void send_update_address() throws IOException {
+        if (addresses.size() == 0) {
+            return;
+        }
+        for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, Integer> entry = iterator.next();
+            String str = entry.getKey();
+            String ip = str.split(":")[0].trim();
+            if (str.equals("Manager : 8888")) {
+                ip = InetIP;
+            }
+            int port = Integer.parseInt(str.split(":")[1].trim());
+
+            UDPSend.sendMessage(ip, port - 1500, ">>");
         }
     }
 

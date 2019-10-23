@@ -24,7 +24,6 @@ public class UDPReceive {
                 break;
             }
         }
-
         System.out.println("接收到的有效字段长度为：" + length);
         String str = new String(datagram, 0, length, "UTF-8");
         datagramSocket.close();

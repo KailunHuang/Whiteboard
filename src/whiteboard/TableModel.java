@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
 
 public class TableModel extends AbstractTableModel implements ModelListener{
     private String[] columns = {"X", "Y", "Width", "Height"}; 
-    private ArrayList<DShapeModel> models; 
+    public ArrayList<DShapeModel> models;
 
     public TableModel() {
     	super();

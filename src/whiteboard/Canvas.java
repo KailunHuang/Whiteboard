@@ -62,16 +62,11 @@ public class Canvas extends JPanel {
         movingKnob = null;
         setVisible(true);
 
-
         System.out.println("服务器IP ：" + board.serverInetIP);
         registry = LocateRegistry.getRegistry(board.serverInetIP, 1099);
         remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
         whiteboard_info = remoteAddress.get_whiteBoard_Info();
 
-        for (int i = 0; i < whiteboard_info.size(); i++) {
-            shapes.add(buildShapeByModel(whiteboard_info.get(i)));
-            repaint();
-        }
 
         addresses = remoteAddress.getAddressed();
         System.out.println("身份标示符：" + board.getMode());
@@ -91,6 +86,8 @@ public class Canvas extends JPanel {
         //接收任意画的线程
         receive_draw_Thread draw_thread = new receive_draw_Thread(board.LocalPort - 5000, this);
         draw_thread.start();
+        receiveMessageThread update_address_thread = new receiveMessageThread(board.LocalPort - 1500);
+        update_address_thread.start();
     }
 
     public void canvasClicked() {
@@ -477,6 +474,27 @@ public class Canvas extends JPanel {
 
     //-----------👇是通讯用到的方法和类---------------------//
 
+    static class receiveMessageThread extends Thread {
+        private int port;
+
+        public receiveMessageThread(int port) {
+            this.port = port;
+        }
+
+        public synchronized void run() {
+            try {
+                while (true) {
+                    String str = UDPReceive.receive(port);
+                    System.out.println("收到了更新地址的信息");
+                    addresses = remoteAddress.getAddressed();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+
     //服务端用来接收图形并放到ArrayList， 端口号-4000
     static class receive_whiteboardInfo_Thread extends Thread {
         private int port;
@@ -514,6 +532,7 @@ public class Canvas extends JPanel {
                 e.printStackTrace();
             }
         }
+
 
         private static Hashtable<String, Integer> addresses = new Hashtable<>();
 

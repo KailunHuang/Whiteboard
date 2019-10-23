@@ -166,7 +166,12 @@ public class joiner {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    whiteboard = new Whiteboard(client, LocalPort, InetIP);
+
+                    if (whiteboard == null) {
+                        whiteboard = new Whiteboard(client, LocalPort, InetIP);
+                    }else {
+                        whiteboard.board.setVisible(true);
+                    }
                 } catch (ClassNotFoundException ex) {
                     ex.printStackTrace();
                 } catch (RemoteException ex) {
