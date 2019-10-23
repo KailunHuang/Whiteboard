@@ -304,16 +304,15 @@ public class Canvas extends JPanel {
 
             whiteboard_info.add(shape.model);
 //            Manager.print_whiteboard_info(whiteboard_info);
-            if (board.getMode() == board.client) {
+            if (board.getMode() == board.client && !board.freehand) {
 //                System.out.println("传输图形给Server");
                 DShapePackage dShapePackage = new DShapePackage(model, 0);
                 UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
 //                System.out.println("已发送图形");
-            } else {
-                if (!board.freehand) {
+            } else if (board.getMode() == board.manager && !board.freehand){
                     send_update_whiteboard(0);
-                }
             }
+
             repaint();
         }
     }
@@ -639,7 +638,9 @@ public class Canvas extends JPanel {
             if(port == board.LocalPort){
                 continue;
             }
-            System.out.println("发送draw给：" +(port - 5000));
+            System.out.println("" +
+                    "" +
+                    "：" +(port - 5000));
             UDPSend.send_draw_info(ip, port - 5000, item);
         }
     }
