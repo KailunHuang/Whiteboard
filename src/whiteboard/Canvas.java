@@ -71,7 +71,6 @@ public class Canvas extends JPanel {
         if (shapes.size() == 0) {
             for (int i = 0; i < whiteboard_info.size(); i++) {
                 shapes.add(buildShapeByModel(whiteboard_info.get(i)));
-                board.add(buildShapeByModel(whiteboard_info.get(i));
             }
             repaint();
         }
