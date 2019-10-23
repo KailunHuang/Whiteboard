@@ -198,6 +198,8 @@ public class Manager {
                     ex.printStackTrace();
                 } catch (NotBoundException ex) {
                     ex.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
             }
         };
