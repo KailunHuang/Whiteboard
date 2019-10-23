@@ -44,7 +44,7 @@ public class joiner {
 //    private static String InetIP;
     private static String InetIP = "192.168.43.200"; //服务端IP
     // 凯凯: 192.168.43.175 小陆: 192.168.43.200
-    public static final String LocalInetIP = "192.168.43.200"; //自己的IP
+    public static final String LocalInetIP = "192.168.43.112"; //自己的IP
     public static int LocalPort = 0;
     private static JButton btnWhiteboard;
     private static JMenuBar menuBar;
@@ -94,13 +94,13 @@ public class joiner {
             remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
             hashtable = remoteAddress.getAddressed(); //得到该method return的数据
             hashtable.remove((socket.getLocalAddress() + ":" + socket.getLocalPort()).substring(1)); //把自己的地址从hashtable中删除
+            LocalPort = socket.getLocalPort();
             printHashtable(hashtable);
             updateTextTable(); //更新GUI中的用户列表
             //------RMI👆-------/
 
             //---------更新在线用户👇----------
             updateThread updateThread = new updateThread(socket.getLocalPort() - 3000);
-            LocalPort = socket.getLocalPort();
             updateThread.start();
 
         } catch (Exception e) {
