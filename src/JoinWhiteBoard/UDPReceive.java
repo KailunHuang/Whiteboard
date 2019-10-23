@@ -31,9 +31,8 @@ public class UDPReceive {
         return str;
     }
 
-    public static DShapePackage receive_whiteboard_info(int port) throws IOException, ClassNotFoundException {
+    public static DShapePackage receive_whiteboard_info(DatagramSocket da) throws IOException, ClassNotFoundException {
         System.out.println("等待接收 whiteboard_info...");
-        DatagramSocket da = new DatagramSocket(port);
         byte[] bytes = new byte[1024 * 1024];
         DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length);
         da.receive(datagramPacket);
@@ -41,13 +40,12 @@ public class UDPReceive {
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
         DShapePackage dShapeModel = (DShapePackage) objectInputStream.readObject();
         System.out.println("接收完毕 " + dShapeModel);
-        da.close();
+//        da.close();
         return dShapeModel;
     }
 
-    public static DShapeModel receive_draw_info(int port) throws IOException, ClassNotFoundException {
-        System.out.println("等待接收 whiteboard_info...");
-        DatagramSocket da = new DatagramSocket(port);
+    public static DShapeModel receive_draw_info(DatagramSocket da) throws IOException, ClassNotFoundException {
+        System.out.println("等待接收 draw...");
         byte[] bytes = new byte[1024 * 1024];
         DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length);
         da.receive(datagramPacket);
@@ -55,7 +53,7 @@ public class UDPReceive {
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
         DLineModel dLineModel = (DLineModel) objectInputStream.readObject();
         System.out.println("接收完毕 " + dLineModel);
-        da.close();
+//        da.close();
         return dLineModel;
     }
 
