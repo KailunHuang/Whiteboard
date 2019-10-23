@@ -139,7 +139,6 @@ public class Canvas extends JPanel {
                     model.setColor(board.penColor);
                     model.setStroke(board.Stroke);
                     try {
-
                         send_draw_info(model);
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -607,9 +606,9 @@ public class Canvas extends JPanel {
                     System.out.println("收到了draw的信息：" + dShapeModel);
                     // 直接画
                     DShape shape = new DLine(dShapeModel);
-                    shapes.add(shape);
-                    selected = shape;
-                    board.add(shape);
+                    canvas.shapes.add(shape);
+                    canvas.selected = shape;
+                    canvas.board.add(shape);
                     repaint();
                 }
             } catch (IOException | ClassNotFoundException e) {

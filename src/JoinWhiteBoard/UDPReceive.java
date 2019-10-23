@@ -40,7 +40,7 @@ public class UDPReceive {
         ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
         DShapePackage dShapeModel = (DShapePackage) objectInputStream.readObject();
         System.out.println("接收完毕 " + dShapeModel);
-        da.close();
+//        da.close();
         return dShapeModel;
     }
 
