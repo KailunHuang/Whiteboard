@@ -15,6 +15,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -465,8 +466,9 @@ public class Canvas extends JPanel {
 
         public synchronized void run() {
             try {
+                DatagramSocket da = new DatagramSocket(port);
                 while (true) {
-                    Manager.DShapePackage dShapePackage = UDPReceive.receive_whiteboard_info(port);
+                    Manager.DShapePackage dShapePackage = UDPReceive.receive_whiteboard_info(da);
                     System.out.println("收到了信息：" + dShapePackage.dShapeModel + ", " + dShapePackage.index);
                     if (dShapePackage.index == 0) { // 直接添加到whitboard_info
                         System.out.println("添加了图形");
@@ -598,9 +600,10 @@ public class Canvas extends JPanel {
 
         public synchronized void run() {
             try {
+                DatagramSocket da = new DatagramSocket(port);
                 while (true) {
 //                    System.out.println("接收线的端口是："+port);
-                    DShapeModel dShapeModel = UDPReceive.receive_draw_info(port);
+                    DShapeModel dShapeModel = UDPReceive.receive_draw_info(da);
                     System.out.println("收到了draw的信息：" + dShapeModel);
                     // 直接画
                     DShape shape = new DLine(dShapeModel);
