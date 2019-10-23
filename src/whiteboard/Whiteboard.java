@@ -612,7 +612,6 @@ public class Whiteboard extends JFrame {
 
 	public void add(DShape shape) {
 		tableModel.add(shape.getModel());
-
 	}
 
 	public void delete(DShape shape) {
