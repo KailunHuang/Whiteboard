@@ -63,7 +63,7 @@ public class Canvas extends JPanel {
 
 
         System.out.println("服务器IP ：" + board.serverInetIP);
-        registry = LocateRegistry.getRegistry(1099);
+        registry = LocateRegistry.getRegistry(board.serverInetIP,1099);
         remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
 
         System.out.println("身份标示符：" + board.getMode());
@@ -312,7 +312,6 @@ public class Canvas extends JPanel {
                     send_update_whiteboard(0);
                 }
             }
-
             repaint();
         }
     }

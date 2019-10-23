@@ -46,7 +46,8 @@ public class UDPReceive {
     }
 
     public static DShapeModel receive_draw_info(int port) throws IOException, ClassNotFoundException {
-        System.out.println("等待接收 whiteboard_info...");
+        System.out.println("等待接收 draw...");
+
         DatagramSocket da = new DatagramSocket(port);
         byte[] bytes = new byte[1024 * 1024];
         DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length);
