@@ -66,14 +66,12 @@ public class Canvas extends JPanel {
         System.out.println("服务器IP ：" + board.serverInetIP);
         registry = LocateRegistry.getRegistry(board.serverInetIP, 1099);
         remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
-
+        addresses = remoteAddress.getAddressed();
         System.out.println("身份标示符：" + board.getMode());
         if (board.getMode() == board.manager) {
             System.out.println("现在是Manager");
             System.out.println("当前Local Port:" + board.LocalPort);
-            addresses = remoteAddress.getAddressed();
             System.out.println("当前的在线用户为");
-            Manager.printHashtable(addresses);
             //接受图形的线程
             receive_whiteboardInfo_Thread rw_thread = new receive_whiteboardInfo_Thread(8888 - 4000, this);
             rw_thread.start();
@@ -623,6 +621,7 @@ public class Canvas extends JPanel {
     //发送任意画的信息
     public static void send_draw_info(DLineModel item) throws IOException {
         System.out.println("在 send_draw_info 中");
+        System.out.println(addresses);
         if (addresses.size() == 0) {
             return;
         }
