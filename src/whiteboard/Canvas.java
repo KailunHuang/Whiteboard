@@ -330,6 +330,9 @@ public class Canvas extends JPanel {
     }
 
     public void addShapeWhileReceive(DShapeModel model) throws IOException {
+        if (model == null){
+            return;
+        }
         if (board.getMode() != 2) {
             DShape shape = null;
             if (model instanceof DOvalModel)
