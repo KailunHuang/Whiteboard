@@ -163,6 +163,13 @@ public class Canvas extends JPanel {
                     model.setColor(Color.WHITE);
                     model.setStroke(board.Stroke);
                     try {
+                        System.out.println("发送的笔触是：" + board.Stroke);
+                        send_draw_info(model);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+
+                    try {
                         addShape(model);
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -611,9 +618,9 @@ public class Canvas extends JPanel {
                     DShape shape = new DLine(dShapeModel);
 //                    canvas.addShapeWhileReceive(dShapeModel);
                     whiteboard_info.add(dShapeModel);
-                    canvas.shapes.add(shape);
-                    canvas.selected = shape;
-                    canvas.board.add(shape);
+                    shapes.add(shape);
+                    selected = shape;
+                    board.add(shape);
                     repaint();
                 }
             } catch (IOException | ClassNotFoundException e) {
