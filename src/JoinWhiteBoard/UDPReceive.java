@@ -1,15 +1,11 @@
 package JoinWhiteBoard;
-
-import CreateWhiteBoard.Manager;
-import whiteboard.DShape;
+import whiteboard.DLineModel;
 import whiteboard.DShapeModel;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.SocketException;
 
 import CreateWhiteBoard.Manager.DShapePackage;
 
@@ -47,6 +43,20 @@ public class UDPReceive {
         System.out.println("接收完毕 " + dShapeModel);
         da.close();
         return dShapeModel;
+    }
+
+    public static DShapeModel receive_draw_info(int port) throws IOException, ClassNotFoundException {
+        System.out.println("等待接收 whiteboard_info...");
+        DatagramSocket da = new DatagramSocket(port);
+        byte[] bytes = new byte[1024 * 1024];
+        DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length);
+        da.receive(datagramPacket);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(datagramPacket.getData());
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
+        DLineModel dLineModel = (DLineModel) objectInputStream.readObject();
+        System.out.println("接收完毕 " + dLineModel);
+        da.close();
+        return dLineModel;
     }
 
 

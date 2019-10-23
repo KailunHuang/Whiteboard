@@ -1,13 +1,10 @@
 package CreateWhiteBoard;
 
 import JoinWhiteBoard.UDPReceive;
-//import com.sun.source.tree.Scope;
 import whiteboard.DShapeModel;
 import whiteboard.Whiteboard;
 
 import javax.swing.*;
-import javax.swing.event.AncestorListener;
-import javax.swing.text.html.HTMLDocument;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,7 +32,6 @@ public class Manager {
 
     private static Hashtable<String, Integer> addresses = new Hashtable<>();
     private static Hashtable<String, Socket> socketList = new Hashtable<>();
-    private static ArrayList<DShapeModel> whiteBoard_Info = new ArrayList<>();
     private static String[] columnNames = {"Online Users"};
     private static String[][] data = new String[10][1];
     private static JTextField sendArea;
@@ -44,7 +40,7 @@ public class Manager {
     private static JTextField textField;
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
-    public static final String InetIP = "192.168.0.129"; // 服务器的IP
+    public static final String InetIP = "192.168.43.33"; // 服务器的IP
     private static JMenuBar menuBar;
 
     private static int manager = 0;
@@ -195,7 +191,7 @@ public class Manager {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Whiteboard whiteboard = new Whiteboard(manager, 4888, InetIP);
+                    Whiteboard whiteboard = new Whiteboard(manager, 8888, InetIP);
                 } catch (ClassNotFoundException ex) {
                     ex.printStackTrace();
                 } catch (RemoteException ex) {
@@ -338,25 +334,6 @@ public class Manager {
         }
     }
 
-    public static void send_update_whiteboard(int index) throws IOException {
-
-        if (addresses.size() == 0) {
-            return;
-        }
-        for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
-            Map.Entry<String, Integer> entry = iterator.next();
-            String str = entry.getKey();
-            System.out.println("通知 " + str + " 更新");
-            if (str.equals("Manager : 8888")) {
-                continue;
-            }
-            String ip = str.split(":")[0].trim();
-            int port = Integer.parseInt(str.split(":")[1].trim());
-
-            UDPSend.update_whiteboard_table(ip, port - 4000, index);
-        }
-    }
-
     public static Hashtable<String, Integer> postHashtable() {
         return addresses;
     }
@@ -370,7 +347,7 @@ public class Manager {
     }
 
     public static void print_whiteboard_info(ArrayList<DShapeModel> arrayList) {
-        System.out.println("当前的whiteboard_info：");
+//        System.out.println("当前的whiteboard_info：");
         for (int i = 0; i < arrayList.size(); i++) {
             System.out.println(i + " : " + arrayList.get(i));
         }

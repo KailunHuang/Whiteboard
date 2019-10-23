@@ -1,5 +1,6 @@
 package CreateWhiteBoard;
 
+import whiteboard.DLineModel;
 import whiteboard.DShapeModel;
 
 import java.awt.*;
@@ -77,4 +78,18 @@ public class UDPSend {
         datagramSocket.close();
         System.out.println("已发送" + item);
     }
+
+    public static void send_draw_info(String ip, int port, DLineModel item) throws IOException {
+
+        DatagramSocket datagramSocket = new DatagramSocket();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(item);
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+        DatagramPacket datagramPacket = new DatagramPacket(bytes, bytes.length, new InetSocketAddress(ip, port));
+        datagramSocket.send(datagramPacket);
+        datagramSocket.close();
+        System.out.println("draw 已发送" + item);
+    }
+
 }
