@@ -397,25 +397,36 @@ public class Canvas extends JPanel {
 
     }
 
-    public void removeShape() {
+    public void removeShape() throws IOException {
 
         if (selected()) {
+            DShapeModel model = selected.getModel();
+            int index = shapes.indexOf(selected);
+
+
             shapes.remove(selected);
             board.delete(selected);
             whiteboard_info.remove(selected.model);
 //            Manager.print_whiteboard_info(whiteboard_info);
-            selected = null;
             //发送删除
+            System.out.println("Index: "+index);
+            if (board.getMode() == board.client) {
+                DShapePackage dShapePackage = new DShapePackage(model, -1*(index+1));
+                UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
+            } else if (board.getMode() == board.manager) {
+                send_update_whiteboard(-1*(index+1));
+            }
+
+            selected = null;
             repaint();
         }
     }
 
     //		overriding removeShape
-    public void removeShape(DShape shape) {
-        shapes.remove(shape);
-        board.delete(shape);
-        whiteboard_info.remove(shape.model);
-//        Manager.print_whiteboard_info(whiteboard_info);
+    public void removeShape(int index) {
+        shapes.remove(index);
+        board.deleteByIndex(index);
+        whiteboard_info.remove(index);
         repaint();
     }
 
@@ -557,7 +568,8 @@ public class Canvas extends JPanel {
                         whiteboard_info.add(dShapePackage.dShapeModel);
                         canvas.addShapeWhileReceive(dShapePackage.dShapeModel);
                     } else if (dShapePackage.index < 0) { //删除
-                        canvas.removeShape(buildShapeByModel(dShapePackage.dShapeModel));
+                        System.out.println("Deleting a shape "+ dShapePackage.index);
+                        canvas.removeShape(-1*dShapePackage.index - 1);
                     } else {//修改其中一个
                         int index = dShapePackage.index - 1;
 //                        System.out.println("current transfer index " + index);
@@ -576,13 +588,6 @@ public class Canvas extends JPanel {
 
         private static Hashtable<String, Integer> addresses = new Hashtable<>();
 
-        public void deletShapesFromHashTable(int index) {
-            int arraySize = canvas.shapes.size();
-            if (index < arraySize) {
-                DShape shape = canvas.shapes.get(index);
-                canvas.removeShape(shape);
-            }
-        }
 
         public void editShapeFromHashTable(ArrayList<DShapeModel> arrayList, int index) {
             DShapeModel model = arrayList.get(index);

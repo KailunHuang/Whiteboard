@@ -524,7 +524,11 @@ public class Whiteboard extends JFrame {
         mntmDelete.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (canvas.selected()) {
-                    canvas.removeShape();
+                    try {
+                        canvas.removeShape();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                     repaint();
                 }
             }
@@ -650,6 +654,8 @@ public class Whiteboard extends JFrame {
         tableModel.delete(shape.getModel());
 
     }
+
+    public void deleteByIndex(int index){tableModel.deleteByIndex(index);}
 
     public void updateModel(DShape shape, int index) {
         tableModel.updateModel(shape.getModel(), index);
