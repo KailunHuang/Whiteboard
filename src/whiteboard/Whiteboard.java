@@ -1,6 +1,9 @@
 package whiteboard;
 
 
+import CreateWhiteBoard.IjoinerAddresses;
+import CreateWhiteBoard.UDPSend;
+
 import java.awt.BorderLayout;
 
 import java.awt.Color;
@@ -26,6 +29,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.*;
 
 import javax.swing.Box;
@@ -65,12 +70,15 @@ public class Whiteboard extends JFrame {
     private DShape selectedShape;
     public TableModel tableModel;
     private HashMap<String, Integer> fontMap;
+    private static IjoinerAddresses remoteAddress;
+    private static Registry registry;
+    public static ArrayList<DShapeModel> whiteboard_info = new ArrayList<>();
+    public static Hashtable<String, Integer> addresses = new Hashtable<>();
 
     private int mode;
     public static int manager = 0;
     public static int client = 1;
 
-    public static Hashtable<Integer, DShapeModel> whiteBoard_Info = new Hashtable<>();
 
     public boolean freehand = false;
     public boolean eraser = false;
@@ -465,6 +473,16 @@ public class Whiteboard extends JFrame {
                 if (n == 0) {
                     saveFileAs();
                 } else {
+                    canvas.whiteboard_info = new ArrayList<DShapeModel>();
+                    try {
+                        registry = LocateRegistry.getRegistry(serverInetIP, 1099);
+                        remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
+                        addresses = remoteAddress.getAddressed();
+                        canvas.send_update_whiteboard(0);
+                    } catch (NotBoundException | IOException ex) {
+                        ex.printStackTrace();
+                    }
+
                     canvas.setNull();
                     repaint();
                 }

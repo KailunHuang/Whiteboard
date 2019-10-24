@@ -49,7 +49,7 @@ public class Canvas extends JPanel {
 
     private static IjoinerAddresses remoteAddress;
     private static Registry registry;
-    private static ArrayList<DShapeModel> whiteboard_info = new ArrayList<>();
+    public static ArrayList<DShapeModel> whiteboard_info = new ArrayList<>();
     public static Hashtable<String, Integer> addresses = new Hashtable<>();
 
 
