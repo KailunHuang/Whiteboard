@@ -45,7 +45,7 @@ public class joiner {
 
     private static String InetIP = "192.168.43.200"; //服务端IP
     // 凯凯: 192.168.43.175 小陆: 192.168.43.200
-    public static final String LocalInetIP = "192.168.43.200"; //自己的IP
+    public static String LocalInetIP = "192.168.43.200"; //自己的IP
 
 
     public static int LocalPort = 0;
@@ -64,9 +64,11 @@ public class joiner {
 //    }
 
 
-    public joiner(String IPAddress, Socket socketClient) {
+    public joiner(String IPAddress, Socket socketClient) throws SocketException {
+        InetIP = CreateWhiteBoard.InetIP.getV4IP();
         InetIP = IPAddress;
         socket = socketClient;
+
         initialize();
         start();
     }

@@ -29,6 +29,7 @@ public class InetIP {
             {
                 InetAddress i = (InetAddress) ee.nextElement();
                 String str = i.getHostAddress();
+//                System.out.println(str);
                 if ((str.charAt(0) != 'f') && (str.charAt(0) != '0') && !(str.equals("127.0.0.1"))) {
                     return  i.getHostAddress();
                 }

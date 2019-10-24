@@ -41,7 +41,7 @@ public class Manager {
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
 
-    public static final String InetIP = "192.168.43.200"; // 服务器的IP
+    public static String InetIP = "192.168.43.200"; // 服务器的IP
     private static JMenuBar menuBar;
 
     public static Whiteboard whiteboard = null;
@@ -50,7 +50,7 @@ public class Manager {
 
 
     public static void main(String[] args) throws SocketException {
-//        InetIP = CreateWhiteBoard.InetIP.getV4IP();
+        InetIP = CreateWhiteBoard.InetIP.getV4IP();
         System.out.println("当前的IP是： " + InetIP);
         initialize();
         start();
