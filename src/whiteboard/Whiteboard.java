@@ -62,7 +62,7 @@ public class Whiteboard extends JFrame {
     public static JFrame board;
     private JTable table;
     private JTextField textField;
-//    private JScrollPane scrollpane;
+    //    private JScrollPane scrollpane;
     private JComboBox fontSelector;
 
     // Initial the variables
@@ -491,7 +491,7 @@ public class Whiteboard extends JFrame {
                         registry = LocateRegistry.getRegistry(serverInetIP, 1099);
                         remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
                         addresses = remoteAddress.getAddressed();
-                        canvas.send_update_whiteboard(0);
+                        send_update_whiteboard(0);
                     } catch (NotBoundException | IOException ex) {
                         ex.printStackTrace();
                     }
@@ -509,7 +509,7 @@ public class Whiteboard extends JFrame {
                     File f = new File(result);
                     try {
                         open(f);
-                    } catch (IOException ex) {
+                    } catch (IOException | NotBoundException ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -521,7 +521,7 @@ public class Whiteboard extends JFrame {
                 File f = chooseOpenFile();
                 try {
                     open(f);
-                } catch (IOException ex) {
+                } catch (IOException | NotBoundException ex) {
                     ex.printStackTrace();
                 }
             }
@@ -701,7 +701,9 @@ public class Whiteboard extends JFrame {
 
     }
 
-    public void deleteByIndex(int index){tableModel.deleteByIndex(index);}
+    public void deleteByIndex(int index) {
+        tableModel.deleteByIndex(index);
+    }
 
     public void updateModel(DShape shape, int index) {
         tableModel.updateModel(shape.getModel(), index);
@@ -743,7 +745,7 @@ public class Whiteboard extends JFrame {
         }
     }
 
-    public void open(File file) throws IOException {
+    public void open(File file) throws IOException, NotBoundException {
         try {
             FileInputStream openFile = new FileInputStream(file);
             ObjectInputStream openObjects = new ObjectInputStream(openFile);
@@ -767,7 +769,29 @@ public class Whiteboard extends JFrame {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        canvas.send_update_whiteboard(0);
+        registry = LocateRegistry.getRegistry(serverInetIP, 1099);
+        remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
+        addresses = remoteAddress.getAddressed();
+        send_update_whiteboard(0);
+    }
+
+    public static void send_update_whiteboard(int index) throws IOException {
+
+        if (addresses.size() == 0) {
+            return;
+        }
+        for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
+            Map.Entry<String, Integer> entry = iterator.next();
+            String str = entry.getKey();
+            if (str.equals("Manager : 8888")) {
+                continue;
+            }
+            System.out.println("通知 " + str + " 更新");
+            String ip = str.split(":")[0].trim();
+            int port = Integer.parseInt(str.split(":")[1].trim());
+
+            UDPSend.update_whiteboard_table(ip, port - 4000, index);
+        }
     }
 
     public void saveImage(File file) {

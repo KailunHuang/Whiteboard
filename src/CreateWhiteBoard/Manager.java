@@ -52,7 +52,7 @@ public class Manager {
 
 
     public static void main(String[] args) throws SocketException {
-        InetIP = CreateWhiteBoard.InetIP.getV4IP();
+        InetIP = args[0];
         System.out.println("当前的IP是： " + InetIP);
         initialize();
         start();

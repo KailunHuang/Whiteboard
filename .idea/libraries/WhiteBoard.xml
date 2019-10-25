@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="WhiteBoard">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/out/artifacts/WhiteBoard_jar/WhiteBoard.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

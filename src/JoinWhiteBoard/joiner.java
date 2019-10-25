@@ -45,7 +45,6 @@ public class joiner {
 
     private static String InetIP = "192.168.43.200"; //服务端IP
     // 凯凯: 192.168.43.175 小陆: 192.168.43.200
-    public static String LocalInetIP = "192.168.43.200"; //自己的IP
 
 
     public static int LocalPort = 0;
@@ -171,7 +170,7 @@ public class joiner {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String message = LocalInetIP + ":" + socket.getLocalPort();
+                    String message = "Me " + ":" + socket.getLocalPort();
                     UDPSend.quit(InetIP, message);
                     socket.close();
                 } catch (IOException ex) {
