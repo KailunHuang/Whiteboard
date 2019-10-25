@@ -451,7 +451,7 @@ public class Manager {
         }
     }
 
-    //--------等待新的user👇---------
+    //--------检测用户是否在线👇---------
     static class dealThread extends Thread {
         Socket client;
 
@@ -463,9 +463,7 @@ public class Manager {
         public synchronized void run() {
             try {
                 InputStream inputStream = client.getInputStream();
-                OutputStream outputStream = client.getOutputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
                 //当线程没有被外部终止时
                 System.out.println("等待连接确认");
                 boolean is_null_pre = false;
@@ -496,11 +494,14 @@ public class Manager {
                     } else {
                         is_null_pre = true;
                     }
+                    Thread.sleep(1100);
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 System.out.println("连接已断开，未传送成功！");
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

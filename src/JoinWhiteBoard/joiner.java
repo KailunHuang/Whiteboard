@@ -81,8 +81,9 @@ public class joiner {
                     while (true) {
                         bufferedWriter.write("> \n");
                         bufferedWriter.flush();
+                        Thread.sleep(1000);
                     }
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException e) {
 
                 }
             }

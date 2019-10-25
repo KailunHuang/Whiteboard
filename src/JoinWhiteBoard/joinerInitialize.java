@@ -15,7 +15,6 @@ public class joinerInitialize {
 	private JTextField textFieldServer;
 	private String serverIPAddress;
 	private Socket socket;
-	private static boolean isConnect = false;
 
 	/**
 	 * Launch the application.
@@ -72,9 +71,6 @@ public class joinerInitialize {
 				System.out.println("目标IP是：" + serverIPAddress);
 				try {
 					socket = new Socket(serverIPAddress, 8888);
-					//---------更新在线用户👇----------
-//					joiner.updateThread updateThread = new joiner.updateThread(socket.getLocalPort() - 3000);
-//					updateThread.start();
 
 					//-------传输画板数据👇---------
 					InputStream inputStream = socket.getInputStream();
@@ -105,12 +101,5 @@ public class joinerInitialize {
 		btnConnect.addActionListener(connectRequest);
 		frame.getContentPane().add(btnConnect);
 
-	}
-
-	public Socket getSocket(){
-		return socket;
-	}
-	public String getServerIPAddress(){
-		return serverIPAddress;
 	}
 }
