@@ -72,7 +72,10 @@ public class joiner {
 
         initialize();
         start();
+        connect_test(socketClient);
+    }
 
+    public static void connect_test(Socket socketClient) {
         Thread connect_test_thread = new Thread() {
             public void run() {
                 try {
@@ -89,10 +92,6 @@ public class joiner {
             }
         };
         connect_test_thread.start();
-    }
-
-    public static int getLocalPort() {
-        return LocalPort;
     }
 
     public static void start() {
@@ -258,13 +257,13 @@ public class joiner {
         btnSend.addActionListener(sendMessage);
     }
 
-    public static void updateChatTable(String message) throws IOException {  //更新GUI中在线用户列表
+    public static void updateChatTable(String message) {  //更新GUI中在线用户列表
         // 把hahstable中的在线用户数据载入data
         textArea.setText(textArea.getText() + message);
         textArea.setCaretPosition(textArea.getText().length());
     }
 
-    public static void updateTextTable() throws IOException {  //更新GUI中在线用户列表
+    public static void updateTextTable() {  //更新GUI中在线用户列表
         data = new String[20][1]; // 在线用户列表中现实的内容
         if (hashtable.size() == 0) {
             return;

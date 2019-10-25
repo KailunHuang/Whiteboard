@@ -216,9 +216,6 @@ public class Canvas extends JPanel {
 //                    System.out.println("selected shape: " + selected);
                     if (selected != null) {
                         selected.moveBy(dx, dy);
-
-
-
                         board.updateTable(selected);
                         //move
 //                        System.out.println("current shapes number:" + shapes.indexOf((selected)));

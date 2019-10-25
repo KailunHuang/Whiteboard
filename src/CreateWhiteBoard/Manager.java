@@ -465,7 +465,6 @@ public class Manager {
                 InputStream inputStream = client.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 //当线程没有被外部终止时
-                System.out.println("等待连接确认");
                 boolean is_null_pre = false;
                 boolean is_null_tmp = false;
                 while (!Thread.interrupted()) {
