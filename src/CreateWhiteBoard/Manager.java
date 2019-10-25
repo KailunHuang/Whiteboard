@@ -493,7 +493,7 @@ public class Manager {
                     } else {
                         is_null_pre = true;
                     }
-                    Thread.sleep(1100);
+                    Thread.sleep(500);
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
