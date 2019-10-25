@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.ConnectException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import javax.swing.*;
 
@@ -91,7 +92,8 @@ public class joinerInitialize {
 					System.out.println("Server的IP地址错误!");
 					JOptionPane.showMessageDialog(null, " Connection Error! ", " Error", JOptionPane.ERROR_MESSAGE);
 				} catch (IOException ex) {
-					ex.printStackTrace();
+					System.out.println("Server的IP地址错误!");
+					JOptionPane.showMessageDialog(null, " Connection Error! ", " Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		};

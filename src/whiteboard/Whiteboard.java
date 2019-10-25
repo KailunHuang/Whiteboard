@@ -81,7 +81,7 @@ public class Whiteboard extends JFrame {
     public boolean freehand = false;
     public boolean eraser = false;
     public Color penColor;
-    public int Stroke = 1;
+    public int Stroke = 3;
     public int LocalPort = 0;
     public String serverInetIP;
 
@@ -201,12 +201,6 @@ public class Whiteboard extends JFrame {
         JMenuItem mntmAddRectangle = new JMenuItem("Add Rectangle");
         mnAddShape.add(mntmAddRectangle);
 
-        JMenu mnSetting = new JMenu("Setting");
-        menuBar.add(mnSetting);
-
-        JMenuItem mntmSetPenColor = new JMenuItem("Pen Color");
-        mnSetting.add(mntmSetPenColor);
-
         // MenuText
         JMenu mnText = new JMenu("Text");
         mnText.setBackground(Color.WHITE);
@@ -268,6 +262,9 @@ public class Whiteboard extends JFrame {
         btnAddLine.setMaximumSize(new Dimension(30, 30));
         btnAddLine.setPreferredSize(new Dimension(30, 30));
 
+        JButton btnColor = new JButton("Color");
+        menuBar.add(btnColor);
+
         JButton btnAddOval = new JButton("");
         btnAddOval.setIcon(new ImageIcon(Whiteboard.class.getResource("/resources/oval.png")));
         btnAddOval.setMaximumSize(new Dimension(30, 30));
@@ -288,7 +285,7 @@ public class Whiteboard extends JFrame {
         btnClose.setMaximumSize(new Dimension(30, 30));
         btnClose.setPreferredSize(new Dimension(30, 30));
 
-        String[] lineWidth = new String[]{"1", "2", "3", "4", "5"};
+        String[] lineWidth = new String[]{"3", "5", "7", "9", "11"};
         JComboBox WidthChooser = new JComboBox(lineWidth);
         WidthChooser.setMaximumSize(new Dimension(80, 30));
         WidthChooser.setPreferredSize(new Dimension(80, 30));
@@ -399,7 +396,7 @@ public class Whiteboard extends JFrame {
             }
         });
 
-        mntmSetPenColor.addActionListener(new ActionListener() {
+        btnColor.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 penColor = JColorChooser.showDialog(Whiteboard.this, "Set Pen Color", Color.BLACK);
 //				System.out.println(penColor);
@@ -689,7 +686,7 @@ public class Whiteboard extends JFrame {
         if (selectedShape != null) {
             if (freehand == false) {
                 int index = tableModel.getRow(selectedShape.getModel());
-                System.out.println("location of the shape: " + index);
+//                System.out.println("location of the shape: " + index);
                 table.setRowSelectionInterval(index, index);
             }
         }
