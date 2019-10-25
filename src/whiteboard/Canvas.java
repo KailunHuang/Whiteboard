@@ -34,8 +34,6 @@ public class Canvas extends JPanel {
     private static Point movingKnob;
 
     private static ArrayList<DShape> shapes = new ArrayList<DShape>();
-    ;
-    private Hashtable<Integer, DShape> shapeTable;
     private static ArrayList<Point> knobs;
 
     private int x = 0;
@@ -79,7 +77,7 @@ public class Canvas extends JPanel {
 
 
         addresses = remoteAddress.getAddressed();
-        System.out.println("身份标示符：" + board.getMode());
+//        System.out.println("身份标示符：" + board.getMode());
         if (board.getMode() == board.manager) {
             System.out.println("现在是Manager");
             System.out.println("当前Local Port:" + board.LocalPort);
@@ -167,7 +165,7 @@ public class Canvas extends JPanel {
                     model.setColor(board.penColor);
                     model.setStroke(board.Stroke);
                     try {
-                        System.out.println("发送的笔触是：" + board.Stroke);
+//                        System.out.println("发送的笔触是：" + board.Stroke);
                         send_draw_info(model);
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -193,7 +191,7 @@ public class Canvas extends JPanel {
                     model.setStroke(3);
 
                     try {
-                        System.out.println("发送的笔触是：" + board.Stroke);
+//                        System.out.println("发送的笔触是：" + board.Stroke);
                         send_draw_info(model);
                     } catch (IOException ex) {
                         ex.printStackTrace();
@@ -318,7 +316,7 @@ public class Canvas extends JPanel {
             selected.setColor(color);
             DShapeModel model = selected.getModel();
             int index = shapes.indexOf(selected);
-            System.out.println("Number of index " +index);
+//            System.out.println("Number of index " +index);
             if (board.getMode() == board.client && !board.freehand && !board.eraser == true) {
                 DShapePackage dShapePackage = new DShapePackage(model, index+1);
                 UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
@@ -406,7 +404,7 @@ public class Canvas extends JPanel {
             whiteboard_info.remove(selected.model);
 //            Manager.print_whiteboard_info(whiteboard_info);
             //发送删除
-            System.out.println("Index: "+index);
+//            System.out.println("Index: "+index);
             if (board.getMode() == board.client) {
                 DShapePackage dShapePackage = new DShapePackage(model, -1*(index+1));
                 UDPSend.send_whiteboard_info(board.serverInetIP, 4888, dShapePackage);
@@ -565,7 +563,7 @@ public class Canvas extends JPanel {
                         whiteboard_info.add(dShapePackage.dShapeModel);
                         canvas.addShapeWhileReceive(dShapePackage.dShapeModel);
                     } else if (dShapePackage.index < 0) { //删除
-                        System.out.println("Deleting a shape "+ dShapePackage.index);
+//                        System.out.println("Deleting a shape "+ dShapePackage.index);
                         canvas.removeShape(-1*dShapePackage.index - 1);
                     } else {//修改其中一个
                         int index = dShapePackage.index - 1;
@@ -622,7 +620,7 @@ public class Canvas extends JPanel {
             try {
                 while (true) {
                     String str = UDPReceive.receive(port);  // 在此阻塞，等待一个UDP传输
-                    System.out.println("Receive message: " + str);
+//                    System.out.println("Receive message: " + str);
                     if (str.substring(0, 2).equals("/w")) { // 如果收到的是/u，则会update在线用户信息
                         whiteboard_info = remoteAddress.get_whiteBoard_Info();
 //                        Manager.print_whiteboard_info(whiteboard_info);
@@ -632,7 +630,7 @@ public class Canvas extends JPanel {
                         }
 
                     } else {
-                        System.out.println("Wrong");
+//                        System.out.println("Wrong");
                     }
                 }
             } catch (IOException e) {
@@ -686,12 +684,12 @@ public class Canvas extends JPanel {
 
         public synchronized void run() {
             try {
-                System.out.println("等待draw的port：" + port);
+//                System.out.println("等待draw的port：" + port);
                 DatagramSocket da = new DatagramSocket(port);
                 while (true) {
 //                    System.out.println("接收线的端口是："+port);
                     DShapeModel dShapeModel = UDPReceive.receive_draw_info(da);
-                    System.out.println("收到了draw的信息：" + dShapeModel.getStroke());
+//                    System.out.println("收到了draw的信息：" + dShapeModel.getStroke());
                     // 直接画
                     DShape shape = new DLine(dShapeModel);
 //                    canvas.addShapeWhileReceive(dShapeModel);
@@ -709,8 +707,8 @@ public class Canvas extends JPanel {
 
     //发送任意画的信息
     public static void send_draw_info(DLineModel item) throws IOException {
-        System.out.println("在 send_draw_info 中");
-        System.out.println(addresses);
+//        System.out.println("在 send_draw_info 中");
+//        System.out.println(addresses);
         if (addresses.size() == 0) {
             return;
         }

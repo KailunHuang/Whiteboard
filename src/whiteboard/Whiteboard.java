@@ -62,17 +62,15 @@ public class Whiteboard extends JFrame {
     public static JFrame board;
     private JTable table;
     private JTextField textField;
-    private JScrollPane scrollpane;
+//    private JScrollPane scrollpane;
     private JComboBox fontSelector;
 
     // Initial the variables
     private Canvas canvas;
-    private DShape selectedShape;
     public TableModel tableModel;
     private HashMap<String, Integer> fontMap;
     private static IjoinerAddresses remoteAddress;
     private static Registry registry;
-    public static ArrayList<DShapeModel> whiteboard_info = new ArrayList<>();
     public static Hashtable<String, Integer> addresses = new Hashtable<>();
 
     private int mode;
@@ -88,6 +86,7 @@ public class Whiteboard extends JFrame {
     public String serverInetIP;
 
     public Whiteboard(int mode, int Localport, String InetIP) throws ClassNotFoundException, IOException, NotBoundException {
+
         this.mode = mode;
         this.LocalPort = Localport;
         this.serverInetIP = InetIP;
@@ -114,9 +113,9 @@ public class Whiteboard extends JFrame {
         table = new JTable(tableModel);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
-        // ScrollPane
-        scrollpane = new JScrollPane(table);
-        scrollpane.setPreferredSize(new Dimension(380, 400));
+//        // ScrollPane
+//        scrollpane = new JScrollPane(table);
+//        scrollpane.setPreferredSize(new Dimension(380, 400));
 
         // Initial MenuBar
         JMenuBar menuBar = new JMenuBar();
@@ -310,7 +309,6 @@ public class Whiteboard extends JFrame {
         controlGroup.add(networkingGroup);
         controlGroup.add(tableGroup);
         controlGroup.add(addGroup);
-        tableGroup.add(scrollpane);
 
         /*
          * Listener
@@ -449,14 +447,32 @@ public class Whiteboard extends JFrame {
 
         textField.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
+                handleTextChange(e);
+
+                try {
+                    canvas.send_update_whiteboard(0);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
 
             public void insertUpdate(DocumentEvent e) {
                 handleTextChange(e);
+                try {
+                    canvas.send_update_whiteboard(0);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
 
             public void removeUpdate(DocumentEvent e) {
                 handleTextChange(e);
+
+                try {
+                    canvas.send_update_whiteboard(0);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
@@ -494,7 +510,11 @@ public class Whiteboard extends JFrame {
                 String result = JOptionPane.showInputDialog("File Name", null);
                 if (result != null) {
                     File f = new File(result);
-                    open(f);
+                    try {
+                        open(f);
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
@@ -502,7 +522,11 @@ public class Whiteboard extends JFrame {
         mntmOpenInSystem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 File f = chooseOpenFile();
-                open(f);
+                try {
+                    open(f);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
@@ -554,6 +578,12 @@ public class Whiteboard extends JFrame {
 
         mntmClearAll.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                canvas.whiteboard_info = new ArrayList<>();
+                try {
+                    canvas.send_update_whiteboard(0);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 canvas.setNull();
                 repaint();
             }
@@ -637,8 +667,9 @@ public class Whiteboard extends JFrame {
         });
 
         // Initial the canvas
+        // Initial the canvas
         board.getContentPane().add(canvas);
-        board.getContentPane().add(controlGroup, BorderLayout.WEST);
+        board.getContentPane().add(controlGroup, BorderLayout.NORTH);
         board.setSize(955, 692);
         board.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         board.setVisible(true);
@@ -715,7 +746,7 @@ public class Whiteboard extends JFrame {
         }
     }
 
-    public void open(File file) {
+    public void open(File file) throws IOException {
         try {
             FileInputStream openFile = new FileInputStream(file);
             ObjectInputStream openObjects = new ObjectInputStream(openFile);
@@ -723,7 +754,8 @@ public class Whiteboard extends JFrame {
             openObjects.close();
 
             clear();
-
+            canvas.whiteboard_info = new ArrayList<>();
+            canvas.setNull();
             for (int i = 0; i < models.length; i++) {
                 canvas.addShape(models[i]);
             }
@@ -738,7 +770,7 @@ public class Whiteboard extends JFrame {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
+        canvas.send_update_whiteboard(0);
     }
 
     public void saveImage(File file) {
