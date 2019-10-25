@@ -4,6 +4,8 @@ import JoinWhiteBoard.UDPReceive;
 import whiteboard.DShapeModel;
 import whiteboard.Whiteboard;
 
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.sql.rowset.spi.SyncResolver;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -93,6 +95,8 @@ public class Manager {
                 System.out.println("这是来自于 " + ip + ": " + socket.getPort());
                 //------是否允许新的用户加入👇------
                 OutputStream outputStream = socket.getOutputStream();
+                InputStream inputStream = socket.getInputStream();
+
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
 
                 // 用户名: ip + socket.getPort
@@ -124,7 +128,6 @@ public class Manager {
                 //-----更新在线用户的地址👆-----
 
                 //-----连接user的线程👇------
-                //给cpu一个申请新线程的请求，然后继续运行。
                 dealThread deal = new dealThread(socket); // 这是扩展的Thread
                 threadPool.submit(deal);
                 //-----连接user的线程👆------
@@ -202,7 +205,7 @@ public class Manager {
                 try {
                     if (whiteboard == null) {
                         whiteboard = new Whiteboard(manager, 8888, InetIP);
-                    }else {
+                    } else {
                         whiteboard.board.setVisible(true);
                     }
                 } catch (ClassNotFoundException ex) {
@@ -464,8 +467,35 @@ public class Manager {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
                 //当线程没有被外部终止时
+                System.out.println("等待连接确认");
+                boolean is_null_pre = false;
+                boolean is_null_tmp = false;
                 while (!Thread.interrupted()) {
                     String request = bufferedReader.readLine(); // 等待接收数据
+//                    System.out.println("收到连接请求：" + request);
+                    if (request != null) {
+                        is_null_tmp = false;
+                    } else {
+                        is_null_tmp = true;
+                    }
+                    if (is_null_tmp && !is_null_pre) {
+                        String address = client.getInetAddress().getHostAddress() + ":" + client.getPort();
+                        System.out.println(address + " 断线了");
+                        addresses.remove(address);
+                        updateTextTable();
+                        send_update_address();
+                    } else if (!is_null_tmp && is_null_pre) {
+                        String address = client.getInetAddress().getHostAddress() + ":" + client.getPort();
+                        System.out.println(address + " 重连了");
+                        addresses.put(address, 1);
+                        updateTextTable();
+                        send_update_address();
+                    }
+                    if (request != null) {
+                        is_null_pre = false;
+                    } else {
+                        is_null_pre = true;
+                    }
                 }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

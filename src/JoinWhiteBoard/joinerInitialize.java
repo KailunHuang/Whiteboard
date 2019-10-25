@@ -15,6 +15,7 @@ public class joinerInitialize {
 	private JTextField textFieldServer;
 	private String serverIPAddress;
 	private Socket socket;
+	private static boolean isConnect = false;
 
 	/**
 	 * Launch the application.
@@ -76,9 +77,7 @@ public class joinerInitialize {
 //					updateThread.start();
 
 					//-------传输画板数据👇---------
-					OutputStream outputStream = socket.getOutputStream();
 					InputStream inputStream = socket.getInputStream();
-					BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
 					BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
 					String ServerAns = bufferedReader.readLine();
 					System.out.println(ServerAns);
@@ -91,6 +90,7 @@ public class joinerInitialize {
 						System.out.println("与Server建立连接失败!");
 						JOptionPane.showMessageDialog(null, " Access Denied! ", " Denied", JOptionPane.ERROR_MESSAGE);
 					}
+
 				} catch (ConnectException connect) {
 					System.out.println("Server的IP地址错误!");
 					JOptionPane.showMessageDialog(null, " Connection Error! ", " Error", JOptionPane.ERROR_MESSAGE);
@@ -104,6 +104,7 @@ public class joinerInitialize {
 		btnConnect.setBounds(106, 247, 117, 29);
 		btnConnect.addActionListener(connectRequest);
 		frame.getContentPane().add(btnConnect);
+
 	}
 
 	public Socket getSocket(){

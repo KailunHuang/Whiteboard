@@ -64,16 +64,33 @@ public class joiner {
 //    }
 
 
-    public joiner(String IPAddress, Socket socketClient) throws SocketException {
+    public joiner(String IPAddress, Socket socketClient) throws SocketException, IOException {
         InetIP = CreateWhiteBoard.InetIP.getV4IP();
+        System.out.println("当前IP是： " + InetIP);
         InetIP = IPAddress;
         socket = socketClient;
 
         initialize();
         start();
+
+        Thread connect_test_thread = new Thread() {
+            public void run() {
+                try {
+                    OutputStream outputStream = socketClient.getOutputStream();
+                    BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(outputStream));
+                    while (true) {
+                        bufferedWriter.write("> \n");
+                        bufferedWriter.flush();
+                    }
+                } catch (IOException e) {
+
+                }
+            }
+        };
+        connect_test_thread.start();
     }
 
-    public static int getLocalPort(){
+    public static int getLocalPort() {
         return LocalPort;
     }
 
@@ -94,7 +111,7 @@ public class joiner {
 
             //------RMI👇-------
             //连接到注册表
-            registry = LocateRegistry.getRegistry(InetIP,1099);
+            registry = LocateRegistry.getRegistry(InetIP, 1099);
             System.out.println(InetIP);
             remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
             hashtable = remoteAddress.getAddressed(); //得到该method return的数据
@@ -171,7 +188,7 @@ public class joiner {
 
                     if (whiteboard == null) {
                         whiteboard = new Whiteboard(client, LocalPort, InetIP);
-                    }else {
+                    } else {
                         whiteboard.board.setVisible(true);
                     }
                 } catch (ClassNotFoundException ex) {
@@ -276,7 +293,7 @@ public class joiner {
             String str = entry.getKey();
 //            System.out.println(str);
             String ip = str.split(":")[0].trim();
-            if (ip.equals("Manager")){
+            if (ip.equals("Manager")) {
                 continue;
             }
             int port = Integer.parseInt(str.split(":")[1].trim()); // 得到port number
@@ -305,10 +322,10 @@ public class joiner {
                         socket.close(); // 连接的socket关闭
                         System.exit(0); // 退出程序
                         System.out.println("Has been kicked out");
-                    } else if(str.substring(0, 2).equals("/m")){
+                    } else if (str.substring(0, 2).equals("/m")) {
                         str = str.substring(2);
                         updateChatTable(str);
-                    }else if (str.substring(0, 2).equals("/o")) { // 如果收到的是/o，则表示Manager关闭了画板服务
+                    } else if (str.substring(0, 2).equals("/o")) { // 如果收到的是/o，则表示Manager关闭了画板服务
                         socket.close(); // 连接的socket关闭
                         JOptionPane.showMessageDialog(null, " The server has been closed! ", " Error", JOptionPane.ERROR_MESSAGE);//提示用户manager已经退出程序
                         System.out.println("Has been closed!");
@@ -319,6 +336,7 @@ public class joiner {
                 e.printStackTrace();
             }
         }
+
     }
 
     public static void printHashtable(Hashtable<String, Integer> hashtable) {
