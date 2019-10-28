@@ -449,9 +449,9 @@ public class Whiteboard extends JFrame {
                 handleTextChange(e);
 
                 try {
-                    if(getMode() == manager) {
+                    if (getMode() == manager) {
                         canvas.send_update_whiteboard(0);
-                    }else {
+                    } else {
                         Manager.DShapePackage dShapePackage = new Manager.DShapePackage(model, 0);
                         UDPSend.send_whiteboard_info(serverInetIP, 4888, dShapePackage);
                     }
@@ -463,7 +463,7 @@ public class Whiteboard extends JFrame {
             public void insertUpdate(DocumentEvent e) {
                 handleTextChange(e);
                 try {
-                    if(getMode() == manager) {
+                    if (getMode() == manager) {
                         canvas.send_update_whiteboard(0);
                     }
 //                    else {
@@ -479,7 +479,7 @@ public class Whiteboard extends JFrame {
                 handleTextChange(e);
 
                 try {
-                    if(getMode() == manager) {
+                    if (getMode() == manager) {
                         canvas.send_update_whiteboard(0);
                     }
 //                    else {
@@ -504,20 +504,20 @@ public class Whiteboard extends JFrame {
                         options[1]);
                 if (n == 0) {
                     saveFileAs();
-                } else {
-                    canvas.whiteboard_info = new ArrayList<DShapeModel>();
-                    try {
-                        registry = LocateRegistry.getRegistry(serverInetIP, 1099);
-                        remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
-                        addresses = remoteAddress.getAddressed();
-                        send_update_whiteboard(0);
-                    } catch (NotBoundException | IOException ex) {
-                        ex.printStackTrace();
-                    }
-
-                    canvas.setNull();
-                    repaint();
                 }
+                canvas.whiteboard_info = new ArrayList<DShapeModel>();
+                try {
+                    registry = LocateRegistry.getRegistry(serverInetIP, 1099);
+                    remoteAddress = (IjoinerAddresses) registry.lookup("joinerAddresses"); //从注册表中寻找joinerAddress method
+                    addresses = remoteAddress.getAddressed();
+                    send_update_whiteboard(0);
+                } catch (NotBoundException | IOException ex) {
+                    ex.printStackTrace();
+                }
+
+                canvas.setNull();
+                repaint();
+
             }
         });
 
