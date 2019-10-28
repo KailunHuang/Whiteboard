@@ -447,7 +447,9 @@ public class Whiteboard extends JFrame {
                 handleTextChange(e);
 
                 try {
-                    canvas.send_update_whiteboard(0);
+                    if(getMode() == manager) {
+                        canvas.send_update_whiteboard(0);
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -456,7 +458,9 @@ public class Whiteboard extends JFrame {
             public void insertUpdate(DocumentEvent e) {
                 handleTextChange(e);
                 try {
-                    canvas.send_update_whiteboard(0);
+                    if(getMode() == manager) {
+                        canvas.send_update_whiteboard(0);
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -466,7 +470,9 @@ public class Whiteboard extends JFrame {
                 handleTextChange(e);
 
                 try {
-                    canvas.send_update_whiteboard(0);
+                    if(getMode() == manager) {
+                        canvas.send_update_whiteboard(0);
+                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
