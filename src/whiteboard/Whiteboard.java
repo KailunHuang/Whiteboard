@@ -465,10 +465,11 @@ public class Whiteboard extends JFrame {
                 try {
                     if(getMode() == manager) {
                         canvas.send_update_whiteboard(0);
-                    }else {
-                        Manager.DShapePackage dShapePackage = new Manager.DShapePackage(model, 0);
-                        UDPSend.send_whiteboard_info(serverInetIP, 4888, dShapePackage);
                     }
+//                    else {
+//                        Manager.DShapePackage dShapePackage = new Manager.DShapePackage(model, 0);
+//                        UDPSend.send_whiteboard_info(serverInetIP, 4888, dShapePackage);
+//                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -480,10 +481,11 @@ public class Whiteboard extends JFrame {
                 try {
                     if(getMode() == manager) {
                         canvas.send_update_whiteboard(0);
-                    }else {
-                        Manager.DShapePackage dShapePackage = new Manager.DShapePackage(model, 0);
-                        UDPSend.send_whiteboard_info(serverInetIP, 4888, dShapePackage);
                     }
+//                    else {
+//                        Manager.DShapePackage dShapePackage = new Manager.DShapePackage(model, 0);
+//                        UDPSend.send_whiteboard_info(serverInetIP, 4888, dShapePackage);
+//                    }
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
