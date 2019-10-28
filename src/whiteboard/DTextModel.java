@@ -15,6 +15,12 @@ public class DTextModel extends DShapeModel implements Serializable{
         text = defaultText; 
         font = defaultFont; 
     }
+
+    public DTextModel(String s) {
+        super();
+        text = s;
+        font = defaultFont;
+    }
     
     public String getText() { 
         return text; 

@@ -374,7 +374,7 @@ public class Whiteboard extends JFrame {
                 eraser = false;
                 freehand = false;
                 String s = textField.getText();
-                DTextModel model = new DTextModel();
+                DTextModel model = new DTextModel(s);
                 model.setBounds(20, 20, 415, 80);
                 try {
                     canvas.addShape(model);
