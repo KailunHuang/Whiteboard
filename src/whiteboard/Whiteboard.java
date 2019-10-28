@@ -2,6 +2,7 @@ package whiteboard;
 
 
 import CreateWhiteBoard.IjoinerAddresses;
+import CreateWhiteBoard.Manager;
 import CreateWhiteBoard.UDPSend;
 
 import java.awt.BorderLayout;
@@ -84,6 +85,7 @@ public class Whiteboard extends JFrame {
     public int Stroke = 3;
     public int LocalPort = 0;
     public String serverInetIP;
+    public DTextModel model;
 
     public Whiteboard(int mode, int Localport, String InetIP) throws ClassNotFoundException, IOException, NotBoundException {
 
@@ -449,6 +451,9 @@ public class Whiteboard extends JFrame {
                 try {
                     if(getMode() == manager) {
                         canvas.send_update_whiteboard(0);
+                    }else {
+                        Manager.DShapePackage dShapePackage = new Manager.DShapePackage(model, 0);
+                        UDPSend.send_whiteboard_info(serverInetIP, 4888, dShapePackage);
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -460,6 +465,9 @@ public class Whiteboard extends JFrame {
                 try {
                     if(getMode() == manager) {
                         canvas.send_update_whiteboard(0);
+                    }else {
+                        Manager.DShapePackage dShapePackage = new Manager.DShapePackage(model, 0);
+                        UDPSend.send_whiteboard_info(serverInetIP, 4888, dShapePackage);
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -472,6 +480,9 @@ public class Whiteboard extends JFrame {
                 try {
                     if(getMode() == manager) {
                         canvas.send_update_whiteboard(0);
+                    }else {
+                        Manager.DShapePackage dShapePackage = new Manager.DShapePackage(model, 0);
+                        UDPSend.send_whiteboard_info(serverInetIP, 4888, dShapePackage);
                     }
                 } catch (IOException ex) {
                     ex.printStackTrace();
@@ -655,10 +666,11 @@ public class Whiteboard extends JFrame {
             }
         });
 
+
         mntmAddText.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String s = textField.getText();
-                DTextModel model = new DTextModel();
+                model = new DTextModel();
                 model.setBounds(20, 20, 415, 80);
                 try {
                     canvas.addShape(model);
