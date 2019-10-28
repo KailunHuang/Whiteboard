@@ -43,7 +43,7 @@ public class Manager {
     private static JScrollPane ChatArea;
     private static JTextArea textArea;
 
-    public static String InetIP = "192.168.43.200"; // 服务器的IP
+    public static String InetIP = "192.168.0.85"; // 服务器的IP
     private static JMenuBar menuBar;
 
     public static Whiteboard whiteboard = null;
@@ -462,6 +462,7 @@ public class Manager {
         //使用同步的方法，防止多个线程对同一个对象的同一个实例变量进行操作时出现值不同步，值被更改的情况。
         public synchronized void run() {
             try {
+                client.setSoTimeout(5000);
                 InputStream inputStream = client.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 //当线程没有被外部终止时
@@ -469,7 +470,7 @@ public class Manager {
                 boolean is_null_tmp = false;
                 while (!Thread.interrupted()) {
                     String request = bufferedReader.readLine(); // 等待接收数据
-//                    System.out.println("收到连接请求：" + request);
+                    System.out.println("收到连接请求：" + request);
                     if (request != null) {
                         is_null_tmp = false;
                     } else {
@@ -499,6 +500,15 @@ public class Manager {
                 e.printStackTrace();
             } catch (IOException e) {
                 System.out.println("连接已断开，未传送成功！");
+                String address = client.getInetAddress().getHostAddress() + ":" + client.getPort();
+                addresses.remove(address);
+                try {
+                    updateTextTable();
+                    send_update_address();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                JOptionPane.showMessageDialog(null, address + " is disconnected! ", " Notice ", JOptionPane.ERROR_MESSAGE);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
