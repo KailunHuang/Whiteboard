@@ -314,11 +314,12 @@ public class joiner {
                     System.out.println("Receive message: " + str);
                     if (str.substring(0, 2).equals("/u")) { // 如果收到的是/u，则会update在线用户信息
                         hashtable = remoteAddress.getAddressed(); // 从Manager得到全新的在线用户列表
-                        hashtable.remove((socket.getLocalAddress() + ":" + socket.getLocalPort()).substring(1));// 把自己删除
+//                        hashtable.remove((socket.getLocalAddress() + ":" + socket.getLocalPort()).substring(1));// 把自己删除
                         updateTextTable(); // 更新GUI上的在线用户列表
                         // printHashtable(hashtable);
                     } else if (str.substring(0, 2).equals("/k")) { // 如果收到的是/k，则表示被踢出了房间
                         socket.close(); // 连接的socket关闭
+                        JOptionPane.showMessageDialog(null, " You has been kicked out by manager! ", " Notice", JOptionPane.ERROR_MESSAGE);
                         System.exit(0); // 退出程序
                         System.out.println("Has been kicked out");
                     } else if (str.substring(0, 2).equals("/m")) {
