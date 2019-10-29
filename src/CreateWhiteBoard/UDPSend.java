@@ -15,6 +15,7 @@ import CreateWhiteBoard.Manager.DShapePackage;
 
 public class UDPSend {
     public static void update(String ip, int port) throws IOException {
+        System.out.println("更新地址");
         DatagramSocket datagramSocket = new DatagramSocket();
         String str = "/u";
         byte[] datagram = str.getBytes();

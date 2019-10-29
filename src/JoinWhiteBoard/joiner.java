@@ -313,8 +313,9 @@ public class joiner {
                     String str = UDPReceive.receive(port);  // 在此阻塞，等待一个UDP传输
                     System.out.println("Receive message: " + str);
                     if (str.substring(0, 2).equals("/u")) { // 如果收到的是/u，则会update在线用户信息
+
                         hashtable = remoteAddress.getAddressed(); // 从Manager得到全新的在线用户列表
-//                        hashtable.remove((socket.getLocalAddress() + ":" + socket.getLocalPort()).substring(1));// 把自己删除
+                        hashtable.remove((socket.getLocalAddress() + ":" + socket.getLocalPort()).substring(1));// 把自己删除
                         updateTextTable(); // 更新GUI上的在线用户列表
                         // printHashtable(hashtable);
                     } else if (str.substring(0, 2).equals("/k")) { // 如果收到的是/k，则表示被踢出了房间

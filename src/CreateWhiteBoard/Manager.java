@@ -122,6 +122,7 @@ public class Manager {
                 //-----更新在线用户的地址👇-----
                 addresses.put(ip + ":" + socket.getPort(), 1);
                 socketList.put(ip + ":" + socket.getPort(), socket); //获取新加入用户的socket
+                System.out.println("》》》》》");
                 updateUsersAddresses(); // 向所有在线用户发送指令，更新用户在线用户信息
                 updateTextTable(); // 刷新GUI上在线用户信息
                 // printHashtable(addresses);
@@ -312,8 +313,13 @@ public class Manager {
         for (Iterator<Map.Entry<String, Integer>> iterator = addresses.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<String, Integer> entry = iterator.next();
             String str = entry.getKey();
+            String ip = str.split(":")[0].trim();
+            if (ip.equals("Manager")){
+                continue;
+            }
             int port = Integer.parseInt(str.split(":")[1].trim());
-            UDPSend.update(InetIP, port - 3000);
+            System.out.println(ip + ":" + (port - 3000));
+            UDPSend.update(ip, port - 3000);
 //            UDPSend.update(InetIP, port - 4000);
         }
     }
